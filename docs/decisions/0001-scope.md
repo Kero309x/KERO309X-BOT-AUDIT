@@ -6,7 +6,7 @@
 ## Context
 
 The bot under audit has a money path that mostly works: nineteen of the twenty
-guards checked in [P12](../../evidence/proofs/P12-money-path-guards-that-hold.md)
+guards checked in [P12](../../evidence/wa-booking-bot/proofs/P12-money-path-guards-that-hold.md)
 hold, including atomic payment claiming and exact amount matching. It also
 has four critical defects and four high ones, spread across the FSM, the
 admin router, the webhook authenticator and the startup lock.
@@ -42,7 +42,7 @@ and the exact place to put it, so that applying it is mechanical rather than
 interpretive. The proof for that finding becomes the regression test once the
 fix lands, because the proof already exits non-zero when the defect is gone.
 
-The findings are ordered for repair in [decision 0004](0004-remediation-order.md).
+The findings are ordered for repair in [decision 0004](../../subjects/wa-booking-bot/decisions/0004-remediation-order.md).
 
 ## Consequences
 
@@ -56,5 +56,5 @@ The findings are ordered for repair in [decision 0004](0004-remediation-order.md
 - Applying the fixes is a separate piece of work that this repository
   specifies but does not perform.
 - The proofs must keep working. They are published in the same repository as
-  the findings, and the baseline in [P13](../../evidence/proofs/P13-test-and-lint-baseline.md)
+  the findings, and the baseline in [P13](../../evidence/wa-booking-bot/proofs/P13-test-and-lint-baseline.md)
   records the test and lint state they were measured against.

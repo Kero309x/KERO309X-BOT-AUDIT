@@ -23,28 +23,26 @@ Every proof in `scripts/proofs/` follows the same shape:
    the code that ships, not a re-implementation of it.
 3. **Shows the contradiction.** A print of the actual value next to the
    expected value.
-4. **Writes a report** to `evidence/proofs/<ID>-<slug>.md` containing the raw
-   output, and updates `evidence/findings.json`.
-5. **Exits `0` if the defect reproduced, `2` if it did not.**
+4. **Writes a report** to `evidence/<subject>/proofs/<ID>-<slug>.md`
+   containing the raw output, and updates the subject's `findings.json`.
+5. **Exits `0` if the defect reproduced, `2` if it did not, `3` if it does
+   not apply to this subject.**
 
-## The exit-code inversion
+## Scopes
 
-Exit `0` means "the defect is present". Exit `2` means "the defect is absent".
+The manifest at `scripts/proofs/manifest.json` declares the scope of every
+proof, and the harness reports coverage by scope after each run.
 
-This is the opposite of what a test does, and it is deliberate. A proof is a
-statement about the current state of the code; a test is a statement about the
-desired state. When a defect is fixed, the proof starts failing, which is the
-signal to convert it into a regression test.
+| Scope | Meaning |
+|---|---|
+| `generic` | Runs against any bot of this shape with no configuration |
+| `configurable` | Runs once the table and column names are set in `audit.config.json` |
+| `template` | A worked example tied to one specific bot — the pattern is what matters, the identifiers are not |
 
-Running the whole suite:
-
-```bash
-node scripts/proofs/run-all.js
-```
-
-Each proof runs in a separate process, so one proof's `require` cache cannot
-affect another's result, and a proof that calls `process.exit` cannot take the
-rest of the suite down with it.
+This distinction exists because the harness is shared. A proof that only
+works on one bot is still worth publishing — it is a worked example — but it
+must be labelled as such, so that a reader knows the difference between "this
+is broken" and "this is how this class of bug looks".
 
 ## Isolation
 
@@ -74,21 +72,31 @@ an Egyptian mobile number without identifying a person.
 Amounts, statuses, provider names and match methods are kept verbatim. A
 finding about payment matching cannot be checked without the amount.
 
-See [decision 0002](0002-redaction.md).
+See [decision 0002](decisions/0002-redaction.md).
 
 ## Screenshots
 
-The screenshots in `evidence/screenshots/` are captured from `sandbox/` — the
-bot repository's own synthetic environment, which runs three invented
-customers and five test bookings against a stub gateway. The capture script
-never reads the live database and never starts an instance against it.
+The screenshots are captured from `sandbox/` in the audited bot's repository
+where one exists — the bot's own synthetic environment, running invented
+customers against a stub gateway. The capture script never reads the live
+database in that mode.
+
+Where the bot has no sandbox, the capture falls back to a temporary copy of
+the live database with the personal columns scrubbed, and deletes the copy
+afterwards. Both paths produce the same result: no screenshot contains a real
+customer.
 
 ## Baseline
 
-[P13](evidence/proofs/P13-test-and-lint-baseline.md) captures `npm test` and
-`npm run lint` output verbatim into `evidence/baseline/`. It exists so that any
-remediation can be measured against a fixed reference rather than against
-recollection.
+[P13](../evidence/wa-booking-bot/proofs/P13-test-and-lint-baseline.md) captures
+the `npm test` and `npm run lint` summary into `evidence/<subject>/baseline/`.
+It exists so that any remediation can be measured against a fixed reference
+rather than against recollection.
+
+The summary is not the raw log. The test suite reads the live database on
+some paths, so its full output contains real customer names. The published
+baseline carries the counts, the failing test names and the lint summary —
+which is what a baseline is for — and none of that data.
 
 At the time of publication:
 
@@ -104,6 +112,28 @@ one of the findings, because a Linux server would hit the same gap.
 
 ## Severity
 
+## The exit-code inversion
+
+Exit `0` means "the defect is present". Exit `2` means "the defect is absent".
+Exit `3` means "this proof does not apply to this subject".
+
+This is the opposite of what a test does, and it is deliberate. A proof is a
+statement about the current state of the code; a test is a statement about the
+desired state. When a defect is fixed, the proof starts failing, which is the
+signal to convert it into a regression test.
+
+Running the whole suite:
+
+```bash
+node scripts/proofs/run-all.js
+```
+
+Each proof runs in a separate process, so one proof's `require` cache cannot
+affect another's result, and a proof that calls `process.exit` cannot take the
+rest of the suite down with it. The run ends with a coverage report broken
+down by scope, and with the identifiers that the manifest declares but the
+directory does not contain.
+
 | Severity | Meaning |
 |---|---|
 | critical | Loss of money, loss of product, loss of access, or the bot fails to start in the target environment |
@@ -115,10 +145,13 @@ one of the findings, because a Linux server would hit the same gap.
 
 - It does not claim the bot's architecture is wrong. Several of the findings
   are one-line mistakes in an otherwise sound design.
-- It does not claim the money has been lost. [P04](evidence/proofs/P04-paid-without-payment-claim.md)
+- It does not claim the money has been lost. [P04](../evidence/wa-booking-bot/proofs/P04-paid-without-payment-claim.md)
   shows bookings without a claim record; whether each of them was a genuine
   payment is a business question the audit cannot answer.
 - It does not test the Vodafone, DigitalCore or OpenWA integrations end to
   end. Those require live accounts and live balances.
 - It does not cover the admin UI's rendering correctness beyond what the
   screenshots show.
+- It does not cover everything. Sixteen proofs look for sixteen specific
+  patterns. A defect that none of them describes is not found by this
+  repository, and the manifest is the honest list of what was looked for.

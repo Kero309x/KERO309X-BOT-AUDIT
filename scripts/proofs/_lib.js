@@ -4,21 +4,23 @@
  * أدوات مشتركة لحزمة إثباتات بوت واتساب.
  *
  * قاعدةEvidence: كل proof يقرأ القاعدة الحقيقية للتجربة في وضع read-only،
- * ويطبع أدلة قابلة لإعادة الإنتاج (deterministic) بعد تنقيح البيانات الشخصية.
+ * ويطبع أدلة قابلة لإعادة الإنتاج (deterministic) بعد تنقية البيانات الشخصية.
  * لا يُكتب أي شيء في data/ ولا في قاعدة البوت.
+ *
+ * الإعدادات تأتي من scripts/proofs/config.js — لا مسارات مطلقة هنا.
  */
 
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const REPO_ROOT = process.env.BOT_REPO
-  ? path.resolve(process.env.BOT_REPO)
-  : path.resolve(__dirname, '..', '..');
-const DATA_DIR = process.env.DATA_DIR || path.join(REPO_ROOT, 'data');
-const DB_PATH = path.join(DATA_DIR, 'bot.db');
-// مجلد الأدلة يتبع مكان السكربت نفسه: يعمل في ريبو البوت وفي ريبو التدقيق.
-const EVIDENCE_DIR = process.env.EVIDENCE_DIR || path.resolve(__dirname, '..', '..', 'evidence');
+const cfgMod = require('./config');
+
+const cfg = cfgMod.resolve(cfgMod.fromArgv());
+const REPO_ROOT = cfg.botRepo;
+const DATA_DIR = cfg.dataDir;
+const DB_PATH = cfg.dbFile;
+const EVIDENCE_DIR = cfg.subjectDir;
 
 /* ------------------------------------------------------------------ */
 /* تنقيح PII — pseudonym ثابت مشتق بـ SHA-256                          */
@@ -128,11 +130,20 @@ function closeDb() {
   }
 }
 
+/** هل الجدول موجود في القاعدة؟ */
+function hasTable(db, name) {
+  try {
+    return !!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?").get(name);
+  } catch (_) {
+    return false;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* إطار الـ finding                                                     */
 /* ------------------------------------------------------------------ */
 
-const SEVERITY_ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
+const SEVERITY_ORDER = { critical: 0, high: 1, medium: 2, low: 3, info: 4 };
 
 const lines = [];
 
@@ -142,13 +153,19 @@ function say(text = '') {
   lines.push(typeof text === 'string' ? maskSource(text) : text);
 }
 
+/** عنوان قسم داخل التقرير. */
+function section(title) {
+  lines.push('');
+  lines.push(`--- ${title} ---`);
+}
+
 /**
  * يبني تقرير finding موحّد الشكل.
  * @param {object} f
  * @param {string} f.id            معرّف الدليل مثل P01
  * @param {string} f.slug          slug قصير
  * @param {string} f.title         العنوان
- * @param {string} f.severity      critical | high | medium | low
+ * @param {string} f.severity      critical | high | medium | low | info
  * @param {string} f.area          المجال
  * @param {string[]} f.refs         مراجع file:line
  * @param {string} f.claim         الادعاء القابل للإثبات
@@ -165,6 +182,7 @@ function report(f) {
   out.push('');
   out.push(`- **Severity:** ${f.severity}`);
   out.push(`- **Area:** ${f.area}`);
+  out.push(`- **Subject:** ${cfg.subject}`);
   out.push(`- **Refs:** ${f.refs.join(', ')}`);
   out.push(`- **Verdict:** ${verdict}`);
   out.push('');
@@ -197,28 +215,23 @@ function report(f) {
   return { text: out.join('\n'), finding: { ...f, observed: undefined, claim: undefined } };
 }
 
-/**
- * ينهي الـ proof: يطبع التقرير، يحفظه في evidence، ويحدّد كود الخروج.
- * كود 0 = الخلل موجود ومُثبَت. كود 2 = الخلل غير موجود (إما مُصلَح أو لم يتكرر).
- */
-function finish(f) {
+/** يكتب تقرير الـfinding في مجلد أدلة الـsubject ويحدّث findings.json. */
+function writeEvidence(f, verdict) {
   const r = report(f);
-  process.stdout.write(r.text);
   try {
-    fs.mkdirSync(path.join(EVIDENCE_DIR, 'proofs'), { recursive: true });
-    const outPath = path.join(EVIDENCE_DIR, 'proofs', `${f.id}-${f.slug}.md`);
+    fs.mkdirSync(cfg.proofsDir, { recursive: true });
+    const outPath = path.join(cfg.proofsDir, `${f.id}-${f.slug}.md`);
     fs.writeFileSync(outPath, r.text, 'utf8');
   } catch (err) {
     process.stderr.write(`[proofs] تعذّر حفظ التقرير: ${err.message}\n`);
   }
-  // سجّل في findings.json للترتيب الآلي
   try {
-    const idxPath = path.join(EVIDENCE_DIR, 'findings.json');
-    let idx = { generatedAt: null, findings: [] };
-    if (fs.existsSync(idxPath)) {
-      idx = JSON.parse(fs.readFileSync(idxPath, 'utf8'));
+    let idx = { generatedAt: null, subject: cfg.subject, findings: [] };
+    if (fs.existsSync(cfg.findingsFile)) {
+      idx = JSON.parse(fs.readFileSync(cfg.findingsFile, 'utf8'));
     }
-    idx.findings = idx.findings.filter((x) => x.id !== f.id);
+    idx.subject = cfg.subject;
+    idx.findings = (idx.findings || []).filter((x) => x.id !== f.id);
     idx.findings.push({
       id: f.id,
       slug: f.slug,
@@ -226,7 +239,7 @@ function finish(f) {
       severity: f.severity,
       area: f.area,
       refs: f.refs,
-      verdict: f.reproduced ? 'REPRODUCED' : 'NOT REPRODUCED',
+      verdict,
       impact: maskSource(f.impact),
       fix: maskSource(f.fix),
       evidence: `proofs/${f.id}-${f.slug}.md`,
@@ -236,22 +249,60 @@ function finish(f) {
       return s !== 0 ? s : a.id.localeCompare(b.id);
     });
     idx.generatedAt = new Date().toISOString();
-    fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
-    fs.writeFileSync(idxPath, `${JSON.stringify(idx, null, 2)}\n`, 'utf8');
+    fs.mkdirSync(path.dirname(cfg.findingsFile), { recursive: true });
+    fs.writeFileSync(cfg.findingsFile, `${JSON.stringify(idx, null, 2)}\n`, 'utf8');
   } catch (err) {
     process.stderr.write(`[proofs] تعذّر تحديث findings.json: ${err.message}\n`);
   }
+  return r;
+}
+
+/**
+ * ينهي الـ proof: يطبع التقرير، يحفظه في evidence، ويحدّد كود الخروج.
+ * كود 0 = الخلل موجود ومُثبَت. كود 2 = الخلل غير موجود (إما مُصلَح أو لم يتكرر).
+ */
+function finish(f) {
+  const r = writeEvidence(f, f.reproduced ? 'REPRODUCED' : 'NOT REPRODUCED');
+  process.stdout.write(r.text);
   closeDb();
   process.exit(f.reproduced ? 0 : 2);
 }
 
-/** يطبع سطر ترويسة داخل التقرير. */
-function section(title) {
-  lines.push('');
-  lines.push(`--- ${title} ---`);
+/**
+ * ينهي الـ proof بأنه غير قابل للتطبيق على هذا الـsubject.
+ * يُستخدم للأدلة المرتبطة ببوت معيّن عندما يُشغَّل against بوت آخر.
+ * كود 3 = غير قابل للتطبيق (ليس فشلاً).
+ */
+function notApplicable(f, reason) {
+  const finding = {
+    ...f,
+    reproduced: false,
+    claim: f.claim || '(غير مطبَّق)',
+    expected: f.expected || '(غير مطبَّق)',
+    observed: `غير قابل للتطبيق على هذا الـsubject: ${reason}`,
+    impact: f.impact || '(غير مطبَّق)',
+    fix: f.fix || '(غير مطبَّق)',
+  };
+  const r = writeEvidence(finding, 'NOT APPLICABLE');
+  process.stdout.write(r.text);
+  closeDb();
+  process.exit(3);
+}
+
+/**
+ * يتحقق من شرط تطبيق الدليل على هذا الـsubject.
+ * @returns {string|null} سبب عدم Applicability، أو null إذا كان قابلاً للتطبيق
+ */
+function precondition(fn, reason) {
+  try {
+    return fn() ? null : reason;
+  } catch (err) {
+    return `${reason} (${err.message})`;
+  }
 }
 
 module.exports = {
+  cfg,
   REPO_ROOT,
   DATA_DIR,
   DB_PATH,
@@ -264,8 +315,11 @@ module.exports = {
   requireDb,
   openDb,
   closeDb,
+  hasTable,
   say,
   section,
   report,
   finish,
+  notApplicable,
+  precondition,
 };

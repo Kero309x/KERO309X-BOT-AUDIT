@@ -1,7 +1,10 @@
-# Local checkout of the audited bot — never commit it
+# Local checkout of the audited bot â€” never commit it
 wa-booking-bot/
 BOT_REPO/
 *.bot/
+
+audit.config.json
+.env.audit
 
 # Environment and secrets
 .env

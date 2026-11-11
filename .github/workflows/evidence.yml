@@ -6,7 +6,7 @@ name: evidence
 # The audited bot is not public, so this workflow needs a private checkout:
 #   git clone https://github.com/<owner>/wa-booking-bot.git
 # with the token in BOT_REPO_TOKEN. If that secret is not available, the
-# workflow skips the proof run and only lints the repository.
+# workflow skips the proof run and only checks the harness itself.
 
 on:
   push:
@@ -18,8 +18,8 @@ permissions:
   contents: read
 
 jobs:
-  proofs:
-    name: Run proof harness
+  harness:
+    name: Check the harness
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,73 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Check the audited bot checkout
+      - name: Parse every script
+        run: |
+          set -euo pipefail
+          for f in scripts/proofs/*.js scripts/*.js; do
+            node --check "$f"
+            echo "ok: $f"
+          done
+
+      - name: Validate the manifest against the scripts
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("fs");
+            const path = require("path");
+            const dir = "scripts/proofs";
+            const manifest = JSON.parse(fs.readFileSync(path.join(dir, "manifest.json"), "utf8"));
+            const files = fs.readdirSync(dir).filter((f) => /^P\d+-.*\.js$/.test(f)).sort();
+            const declared = manifest.proofs.map((p) => p.id);
+            const onDisk = files.map((f) => f.split("-")[0]);
+            const missing = declared.filter((id) => !onDisk.includes(id));
+            const undeclared = onDisk.filter((id) => !declared.includes(id));
+            if (missing.length) { console.error("declared but not on disk: " + missing.join(", ")); process.exit(1); }
+            if (undeclared.length) { console.error("on disk but not declared: " + undeclared.join(", ")); process.exit(1); }
+            for (const p of manifest.proofs) {
+              if (!["generic", "configurable", "template"].includes(p.scope)) {
+                console.error("bad scope for " + p.id + ": " + p.scope);
+                process.exit(1);
+              }
+            }
+            console.log("manifest ok: " + manifest.proofs.length + " proofs");
+          '
+
+      - name: The harness must not contain an absolute path
+        run: |
+          set -euo pipefail
+          # حرف محرّك + مسار، لكن ليس جزءاً من URL (http://)
+          # scripts/repo/ مستثنى: هذه سكربتات نشر هذا المستودع نفسه.
+          if grep -rnE '(^|[^A-Za-z0-9])[A-Za-z]:[\\/](?![\\/])' scripts/proofs scripts/*.js ; then
+            echo "::error::absolute path found in the harness"
+            exit 1
+          fi
+          echo "no absolute paths in the harness"
+
+      - name: The harness must not contain a hard-coded subject
+        run: |
+          set -euo pipefail
+          if grep -rn "wa-booking-bot" scripts/proofs scripts/*.js ; then
+            echo "::error::subject-specific identifier found in the harness"
+            exit 1
+          fi
+          echo "no subject-specific identifiers in the harness"
+
+      - name: Every internal link must resolve
+        run: node scripts/check-links.js
+
+  proofs:
+    name: Run the proof harness
+    runs-on: ubuntu-latest
+    needs: harness
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check out the audited bot
         id: checkout
         env:
           BOT_REPO_TOKEN: ${{ secrets.BOT_REPO_TOKEN }}
@@ -39,10 +105,10 @@ jobs:
             echo "::notice::BOT_REPO_TOKEN is not set — skipping the proof run"
             exit 0
           fi
-          git clone --depth 1 "https://x-access-token:${BOT_REPO_TOKEN}@github.com/kero309x/wa-booking-bot.git" bot
+          git clone --depth 1 "https://x-access-token:${BOT_REPO_TOKEN}@github.com/Kero309x/wa-booking-bot.git" bot
           echo "available=true" >> "$GITHUB_OUTPUT"
 
-      - name: Install bot dependencies
+      - name: Install the bot's dependencies
         if: steps.checkout.outputs.available == 'true'
         working-directory: bot
         run: npm ci --omit=dev
@@ -51,31 +117,49 @@ jobs:
         if: steps.checkout.outputs.available == 'true'
         env:
           BOT_REPO: ${{ github.workspace }}/bot
+          AUDIT_SUBJECT: wa-booking-bot
         run: node scripts/proofs/run-all.js
 
-      - name: Upload captured output
+      - name: Upload the captured output
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evidence
           path: |
-            evidence/proofs/
-            evidence/findings.json
-            evidence/proof-run.json
+            evidence/*/proofs/
+            evidence/*/findings.json
+            evidence/*/proof-run.json
           if-no-files-found: warn
 
-  lint:
-    name: Syntax check
+  privacy:
+    name: Privacy check
     runs-on: ubuntu-latest
+    needs: proofs
+    if: needs.proofs.result == 'success'
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Parse every proof script
+
+      - name: Check out the audited bot
+        env:
+          BOT_REPO_TOKEN: ${{ secrets.BOT_REPO_TOKEN }}
         run: |
           set -euo pipefail
-          for f in scripts/proofs/*.js scripts/*.js; do
-            node --check "$f"
-            echo "ok: $f"
-          done
+          if [ -z "${BOT_REPO_TOKEN}" ]; then
+            echo "::notice::no bot checkout — skipping the privacy check"
+            exit 0
+          fi
+          git clone --depth 1 "https://x-access-token:${BOT_REPO_TOKEN}@github.com/Kero309x/wa-booking-bot.git" bot
+
+      - name: Install the bot's dependencies
+        working-directory: bot
+        run: npm ci --omit=dev
+
+      - name: No identifier from the live database may appear here
+        env:
+          BOT_REPO: ${{ github.workspace }}/bot
+          AUDIT_SUBJECT: wa-booking-bot
+        run: node scripts/leak-scan.js

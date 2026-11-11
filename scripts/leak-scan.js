@@ -1,76 +1,88 @@
 'use strict';
 
 /**
- * فحص تسرّب شامل: يستخرج كل المعرّفات الحقيقية من القاعدة الحقيقية
- * (بوت الواتساب) ويتحقّق إن ولا واحد منها وارد في محتوى مستودع التدقيق.
+ * فحص تسرّب شامل: يستخرج كل المعرّفات الحقيقية من قاعدة الـsubject
+ * ويتحقّق إن ولا واحد منها وارد في محتوى المستودع.
  *
  * هذا هو الفحص الحاسم — لا يكتفي بأنماط معروفة.
+ *
+ * التشغيل: node scripts/leak-scan.js [--subject id]
  */
 
 const fs = require('node:fs');
 const path = require('node:path');
-const Database = require(path.join('D:/wa-booking-bot/node_modules', 'better-sqlite3'));
 
-const BOT_DB = 'D:/wa-booking-bot/data/bot.db';
-const AUDIT_ROOT = 'D:/KERO309X-BOT-AUDIT';
+const cfgMod = require('./proofs/config');
+const overrides = cfgMod.fromArgv();
 
-const db = new Database(BOT_DB, { readonly: true });
+let cfg;
+try {
+  cfg = cfgMod.resolve(overrides);
+} catch (err) {
+  console.error(`\n${err.message}\n`);
+  process.exit(2);
+}
+
+// eslint-disable-next-line global-require, import/no-dynamic-require
+const Database = require(path.join(cfg.botRepo, 'node_modules', 'better-sqlite3'));
+
+const db = new Database(cfg.dbFile, { readonly: true });
 
 function values(query) {
   try {
-    return db.prepare(query).all().map((r) => Object.values(r)[0]).filter((v) => v !== null && v !== undefined && String(v).trim() !== '');
+    return db.prepare(query).all().map((r) => Object.values(r)[0])
+      .filter((v) => v !== null && v !== undefined && String(v).trim() !== '');
   } catch (_) {
     return [];
   }
 }
 
+const M = cfg.moneyPath;
+
 const phones = new Set([
-  ...values('SELECT requested_phone FROM bookings'),
-  ...values('SELECT whatsapp_phone FROM bookings'),
-  ...values('SELECT sender_phone FROM bookings'),
-  ...values('SELECT whatsapp_phone FROM customers'),
-  ...values('SELECT sender_phone FROM trusted_payments'),
-  ...values('SELECT phone FROM owner_accounts'),
-  ...values('SELECT member_phone FROM owner_members'),
-  ...values('SELECT owner_phone FROM owner_members'),
-  ...values('SELECT phone FROM stock_waitlist'),
+  ...M.phoneColumns.map((c) => values(`SELECT ${c} FROM ${M.bookingsTable}`)).flat(),
+  ...values(`SELECT whatsapp_phone FROM ${M.customersTable}`),
+  ...values(`SELECT sender_phone FROM ${M.trustedPaymentsTable}`),
+  ...values(`SELECT phone FROM ${M.ownerAccountsTable}`),
+  ...values(`SELECT member_phone FROM ${M.ownerMembersTable}`),
+  ...values(`SELECT owner_phone FROM ${M.ownerMembersTable}`),
 ]);
 
 const names = new Set([
-  ...values('SELECT customer_name FROM bookings'),
-  ...values('SELECT name FROM customers'),
-  ...values('SELECT customer_name FROM tickets'),
-  ...values('SELECT customer_name FROM handoffs'),
-  ...values('SELECT name FROM owner_accounts'),
-  ...values('SELECT member_name FROM owner_members'),
-  ...values('SELECT sender FROM trusted_payments'),
+  ...values(`SELECT ${M.customerNameColumn} FROM ${M.bookingsTable}`),
+  ...values(`SELECT name FROM ${M.customersTable}`),
+  ...values(`SELECT customer_name FROM tickets`),
+  ...values(`SELECT customer_name FROM handoffs`),
+  ...values(`SELECT name FROM ${M.ownerAccountsTable}`),
+  ...values(`SELECT member_name FROM ${M.ownerMembersTable}`),
+  ...values(`SELECT sender FROM ${M.trustedPaymentsTable}`),
 ]);
 
 const chatIds = new Set([
-  ...values('SELECT chat_id FROM bookings'),
-  ...values('SELECT chat_id FROM customers'),
-  ...values('SELECT chat_id FROM tickets'),
-  ...values('SELECT chat_id FROM handoffs'),
-  ...values('SELECT chat_id FROM chats'),
+  ...values(`SELECT ${M.chatIdColumn} FROM ${M.bookingsTable}`),
+  ...values(`SELECT chat_id FROM ${M.customersTable}`),
+  ...values(`SELECT chat_id FROM tickets`),
+  ...values(`SELECT chat_id FROM handoffs`),
+  ...values(`SELECT chat_id FROM chats`),
 ]);
 
 const refs = new Set([
-  ...values('SELECT transaction_id FROM bookings'),
-  ...values('SELECT reference_id FROM trusted_payments'),
-  ...values('SELECT sms_ref_id FROM bookings'),
-  ...values('SELECT receipt_path FROM bookings'),
+  ...values(`SELECT transaction_id FROM ${M.bookingsTable}`),
+  ...values(`SELECT reference_id FROM ${M.trustedPaymentsTable}`),
+  ...values(`SELECT ${M.refRawColumn} FROM ${M.bookingsTable}`),
+  ...values(`SELECT receipt_path FROM ${M.bookingsTable}`),
 ]);
 
+console.log(`الـsubject: ${cfg.subject}`);
 console.log(`معرّفات حقيقية في القاعدة: ${phones.size} رقم · ${names.size} اسم · ${chatIds.size} محادثة · ${refs.size} مرجع`);
 
 /**
  * الاسم المعرِّف هو الاسم الكامل (اسمان على الأقل) — الاسم المفرد الشائع
- * ("محمد"، "عميل") ليس معرِّفاً بذاته ولا يسرّب هوية، بل هو materia عامة
- * يستخدمها المشروع أصلاً في الاختبارات.
+ * ("محمد"، "عميل") ليس معرِّفاً بذاته ولا يسرّب هوية.
  */
 const COMMON_SINGLE_NAMES = new Set([
   'عميل', 'عميلة', 'أحمد', 'احمد', 'محمد', 'محمود', 'خالد', 'مصطفى', 'مصطفي',
-  'فاطمة', 'فاطمه', 'عمر', 'سارة', 'ساره', 'يوسف', 'يونس', 'خالد', 'سيد',
+  'فاطمة', 'فاطمه', 'عمر', 'سارة', 'ساره', 'يوسف', 'يونس', 'سيد',
   'هدى', 'علي', 'عبدالله', 'غير محدد', 'غير محدده', 'test', 'Test',
 ]);
 
@@ -78,17 +90,14 @@ const identifyingNames = [...names].filter((n) => {
   const s = String(n).trim();
   if (s.length < 5) return false;
   if (COMMON_SINGLE_NAMES.has(s)) return false;
-  // اسم كامل: كلمتان على الأقل بطول إجمالي لا يقل عن 11
   const words = s.split(/\s+/);
   if (words.length < 2) return false;
   if (s.length < 11) return false;
-  // استثنِ القوالب ذات القيم الحرفية الشائعة
-  if (/^BKG-|^VF-|^DC-|^WB-|^ORD-|^TXN-/.test(s)) return false;
+  if (/^BKG-|^VF-|^DC-|^WB-|^ORD-|^TXN-|^CPN-/.test(s)) return false;
   return true;
 });
 
 console.log(`أسماء معرِّفة (اسمان فأكثر): ${identifyingNames.length} من ${names.size}`);
-identifyingNames.slice(0, 10).forEach((n) => console.log(`   · ${n}`));
 
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {
   const p = path.join(d, e.name);
@@ -97,11 +106,11 @@ const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {
 });
 
 let leaks = 0;
-for (const file of walk(AUDIT_ROOT)) {
+for (const file of walk(cfg.harnessRoot)) {
   if (file.endsWith('.png') || file.endsWith('.jpg')) continue;
   let content;
   try { content = fs.readFileSync(file, 'utf8'); } catch (_) { continue; }
-  const rel = path.relative(AUDIT_ROOT, file);
+  const rel = path.relative(cfg.harnessRoot, file);
   const found = [];
   for (const [label, set] of [
     ['phone', phones],

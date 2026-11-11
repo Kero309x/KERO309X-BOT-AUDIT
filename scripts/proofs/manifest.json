@@ -1,0 +1,155 @@
+{
+  "version": "0.2.0",
+  "note": "Each proof declares its scope. 'generic' runs against any bot of this shape without changes. 'configurable' runs after the table and column names are set in audit.config.json. 'template' is a worked example tied to one specific bot — read it, then port it: the pattern is what matters, the identifiers are not.",
+  "exitCodes": {
+    "0": "the defect is present (reproduced)",
+    "2": "the defect is absent — fixed, or it did not reproduce",
+    "3": "not applicable to this subject — the precondition was not met"
+  },
+  "proofs": [
+    {
+      "id": "P01",
+      "slug": "mina-gate-by-name",
+      "scope": "template",
+      "severity": "critical",
+      "area": "money-path",
+      "requires": ["a function that gates fulfilment on customer-supplied input"],
+      "portability": "Rename the function and the regex in the proof to match the bot under audit. The pattern to look for in any bot: a boolean gate that reads a field the customer typed, and whose result skips a payment step."
+    },
+    {
+      "id": "P02",
+      "slug": "digitalcore-rebuy-type-mismatch",
+      "scope": "template",
+      "severity": "critical",
+      "area": "money-path",
+      "requires": ["an admin route that retries a digital purchase"],
+      "portability": "Points at two specific functions. The general pattern: a function returns a scalar, its caller reads a property from it, and the property check is always true."
+    },
+    {
+      "id": "P03",
+      "slug": "sms-webhook-fail-open",
+      "scope": "template",
+      "severity": "critical",
+      "area": "security",
+      "requires": ["a webhook authenticator"],
+      "portability": "P14 is the generic version of this class — it scans every module for the same pattern. Port P03 only if you need the per-request proof."
+    },
+    {
+      "id": "P04",
+      "slug": "paid-without-payment-claim",
+      "scope": "configurable",
+      "severity": "high",
+      "area": "money-path",
+      "requires": ["a claims table linking a payment to an order"],
+      "portability": "Set moneyPath.bookingsTable, moneyPath.claimsTable and moneyPath.smsVerifiedColumn in audit.config.json."
+    },
+    {
+      "id": "P05",
+      "slug": "coupon-not-consumed-on-atomic-claim",
+      "scope": "configurable",
+      "severity": "high",
+      "area": "money-path",
+      "requires": ["a coupon redemption table"],
+      "portability": "Set moneyPath.couponRedemptionsTable. If the bot has no coupons, this proof reports NOT APPLICABLE."
+    },
+    {
+      "id": "P06",
+      "slug": "name-fuzzy-match-collides",
+      "scope": "template",
+      "severity": "high",
+      "area": "money-path",
+      "requires": ["a fuzzy name matcher on the payment path"],
+      "portability": "Point the proof at the matcher exported by the bot under audit. The test pairs are generic Arabic names and need no change."
+    },
+    {
+      "id": "P07",
+      "slug": "followups-digital-activation-dead",
+      "scope": "template",
+      "severity": "medium",
+      "area": "reliability",
+      "requires": ["a fulfilment status check"],
+      "portability": "P15 is the generic version of this class — it validates every SQL column reference against the live schema. Prefer P15 on a new bot."
+    },
+    {
+      "id": "P08",
+      "slug": "undeclared-production-dependency",
+      "scope": "generic",
+      "severity": "high",
+      "area": "deployment",
+      "requires": [],
+      "portability": "No configuration. Works on any Node project with a package.json."
+    },
+    {
+      "id": "P09",
+      "slug": "data-dir-triggers-mock-sends",
+      "scope": "generic",
+      "severity": "high",
+      "area": "deployment",
+      "requires": [],
+      "portability": "Looks for the isTestEnvironment heuristic anywhere in src/. Works on any bot that derives its data directory from the environment."
+    },
+    {
+      "id": "P10",
+      "slug": "stale-lock-pid-blocks-boot",
+      "scope": "generic",
+      "severity": "critical",
+      "area": "deployment",
+      "requires": ["a PID lock file"],
+      "portability": "Set lockFile in audit.config.json if the bot names it differently. The proof reads the live lock file and simulates the check."
+    },
+    {
+      "id": "P11",
+      "slug": "refund-does-not-restore-wallet",
+      "scope": "configurable",
+      "severity": "medium",
+      "area": "money-path",
+      "requires": ["a wallet balance on customers"],
+      "portability": "Set moneyPath.refundsTable and moneyPath.customersTable. If the bot has no wallet, this proof reports NOT APPLICABLE."
+    },
+    {
+      "id": "P12",
+      "slug": "money-path-guards-that-hold",
+      "scope": "configurable",
+      "severity": "info",
+      "area": "money-path",
+      "requires": ["a claims table with unique indexes"],
+      "portability": "Set moneyPath.claimsTable and moneyPath.bookingsTable. This is the positive control — run it after every change to the payment path."
+    },
+    {
+      "id": "P13",
+      "slug": "test-and-lint-baseline",
+      "scope": "generic",
+      "severity": "info",
+      "area": "quality",
+      "requires": [],
+      "portability": "No configuration. Runs the bot's own npm test and npm run lint."
+    },
+    {
+      "id": "P14",
+      "slug": "unconfigured-auth-fail-open-scan",
+      "scope": "generic",
+      "severity": "critical",
+      "area": "security",
+      "requires": [],
+      "portability": "No configuration. Scans every module in src/ for an authenticator that accepts a request when its credential is missing."
+    },
+    {
+      "id": "P15",
+      "slug": "sql-column-not-in-schema",
+      "scope": "generic",
+      "severity": "high",
+      "area": "reliability",
+      "requires": ["a SQLite database"],
+      "portability": "No configuration. Extracts every column reference from every SQL string in src/ and validates it against the live schema."
+    },
+    {
+      "id": "P16",
+      "slug": "swallowed-error-scan",
+      "scope": "generic",
+      "severity": "medium",
+      "area": "reliability",
+      "requires": [],
+      "portability": "No configuration. Finds catch blocks and floating promises that swallow an error without recording it."
+    }
+  ]
+}

@@ -25,14 +25,34 @@ Copy the shape of an existing one in `scripts/proofs/`:
 
 - `'use strict'`, and a header comment saying what it proves.
 - Read the artefact, run the shipped code, show the contradiction.
-- Print through `say()` from `_lib.js`, so the raw output is captured.
+- Print through `say()` from `_lib.js`, so the raw output is captured and
+  masked.
 - Call `finish(finding)` with `id`, `slug`, `title`, `severity`, `area`,
   `refs`, `claim`, `expected`, `observed`, `impact`, `fix`, and `reproduced`.
-- Exit `0` when the defect reproduced, `2` when it did not. See
-  `docs/decisions/0003-proof-conventions.md`.
+- Call `notApplicable(finding, reason)` when the precondition is not met for
+  the subject under audit.
+- Exit `0` when the defect reproduced, `2` when it did not, `3` when it does
+  not apply. See `docs/decisions/0003-proof-conventions.md`.
 
-Every `require` of the audited bot must go through `REPO_ROOT` from `_lib.js`,
-which honours the `BOT_REPO` environment variable. Do not hard-code paths.
+Every reference to the audited bot must go through `cfg` from `_lib.js`, which
+is resolved by `scripts/proofs/config.js`. **Never hard-code a path** — the
+repository is shared and each person audits a different bot in a different
+directory.
+
+Add the proof to `scripts/proofs/manifest.json` with its scope, or the
+coverage report will flag it as undeclared.
+
+## Scopes
+
+| Scope | Use it when |
+|---|---|
+| `generic` | The proof works on any bot of this shape with no configuration |
+| `configurable` | The proof reads table or column names from `moneyPath` |
+| `template` | The proof is a worked example tied to one bot |
+
+Be honest about the scope. A proof labelled `generic` that only works on one
+bot will produce a wrong result on someone else's bot, and that is worse than
+saying it is a template.
 
 ## Adding a database read
 
@@ -54,7 +74,8 @@ the amount.
 
 ## Regenerating the documentation
 
-The pages under `docs/findings/` are generated from the proof reports:
+The pages under `subjects/<id>/findings-*.md` are generated from the proof
+reports:
 
 ```bash
 node scripts/build-findings-docs.js
@@ -62,6 +83,19 @@ node scripts/build-findings-docs.js
 
 Run it after changing any proof report, and commit the result. Do not edit
 those pages by hand.
+
+## Adding a subject
+
+1. Add an entry to your local `audit.config.json` (gitignored).
+2. Run the harness, then `node scripts/build-findings-docs.js`.
+3. Write `subjects/<id>/README.md` describing the system, and add
+   `architecture.md` and any migration review.
+4. Run `node scripts/leak-scan.js` and make sure it passes.
+5. Open a pull request.
+
+Keep each subject's narrative in `subjects/<id>/` and the raw output in
+`evidence/<id>/`. Nothing about one subject should appear in another's files —
+the paths are separate by construction, and the leak scan enforces it.
 
 ## Style
 

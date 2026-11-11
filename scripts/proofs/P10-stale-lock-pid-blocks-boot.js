@@ -12,7 +12,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { REPO_ROOT, DATA_DIR, say, section, finish } = require('./_lib');
+const { cfg, REPO_ROOT, DATA_DIR, say, section, finish } = require('./_lib');
 
 function main() {
   section('منطق فحص القفل في src/server.js');
@@ -65,7 +65,17 @@ function main() {
   say(`حالة PID غير حيّ:                  ${JSON.stringify(dead)}`);
 
   section('الأثر مع systemd');
-  const svc = fs.readFileSync(path.join(REPO_ROOT, 'deploy', 'systemd', 'wa-booking-bot.service'), 'utf8');
+  const svcPath = path.join(REPO_ROOT, 'deploy', 'systemd', `${cfg.subject}.service`);
+  const svc = fs.existsSync(svcPath)
+    ? fs.readFileSync(svcPath, 'utf8')
+    : (() => {
+      // نبحث عن أي ملف خدمة داخل deploy/systemd
+      const dir = path.join(REPO_ROOT, 'deploy', 'systemd');
+      try {
+        const f = fs.readdirSync(dir).find((x) => x.endsWith('.service'));
+        return f ? fs.readFileSync(path.join(dir, f), 'utf8') : '';
+      } catch (_) { return ''; }
+    })();
   svc.split('\n').forEach((l) => {
     if (/Restart=|StartLimit|ExecStart|WorkingDirectory/.test(l)) say(`  ${l.trim()}`);
   });
@@ -93,7 +103,7 @@ function main() {
     title: 'ملف القفل يحمل PID من ويندوز فيمنع إقلاع البوت على السيرفر',
     severity: 'critical',
     area: 'deployment',
-    refs: ['src/server.js:832-856', 'scripts/supervisor.js:79-102', 'deploy/systemd/wa-booking-bot.service'],
+    refs: ['src/server.js:832-856', 'scripts/supervisor.js:79-102', 'deploy/systemd/<service>.service'],
     claim:
       'فحص النسخة الواحدة يعتمد على process.kill(pid, 0) وحدها: إذا كان PID مخزّن '
       + 'حيّاً على السيرفر الجديد، يخرج البوت بـ exit(2) بدون التحقق من هوية العملية.',

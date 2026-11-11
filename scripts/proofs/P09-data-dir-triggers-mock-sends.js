@@ -75,9 +75,9 @@ function main() {
 
   const cases = [
     ['DATA_DIR = <repo>/data (الوضع الحالي على ويندوز)', prodData, 'production'],
-    ['DATA_DIR = /opt/wa-booking-bot/data (المسار المقترح في الدليل)', '/opt/wa-booking-bot/data', 'production'],
+    ['DATA_DIR = /opt/example-bot/data (المسار المقترح في الدليل)', '/opt/example-bot/data', 'production'],
     ['DATA_DIR = <repo>/data + NODE_ENV=production', prodData, 'production'],
-    ['DATA_DIR = /opt/wa-booking-bot/data + NODE_ENV=test', '/opt/wa-booking-bot/data', 'test'],
+    ['DATA_DIR = /opt/example-bot/data + NODE_ENV=test', '/opt/example-bot/data', 'test'],
   ];
   cases.forEach(([label, dir, env]) => {
     say(`${label}`);
@@ -90,7 +90,7 @@ function main() {
   say('followups.isTestEnvironment يوقف المتابعات التلقائية إذا احتوى مسار');
   say('DATA_DIR على السلسلة "wa-booking-" — وهي شائعة في أسماء مجلدات النشر.');
 
-  const reproduced = runOpenwa('/opt/wa-booking-bot/data', 'production') === true;
+  const reproduced = runOpenwa('/opt/example-bot/data', 'production') === true;
 
   finish({
     id: 'P09',
@@ -108,10 +108,10 @@ function main() {
       + 'وأن يكون مسار البيانات قابلاً للتغيير بحرية.',
     observed:
       'DATA_DIR=<repo>/data ⇒ isTestEnvironment=false (إرسال حقيقي). '
-      + 'DATA_DIR=/opt/wa-booking-bot/data ⇒ isTestEnvironment=true (كل الإرسال MOCK). '
+      + 'DATA_DIR=/opt/example-bot/data ⇒ isTestEnvironment=true (كل الإرسال MOCK). '
       + 'حتى مع NODE_ENV=production.',
     impact:
-      'النقل إلى السيرفر بالشكل الموصوف في DEPLOYMENT.md (DATA_DIR=/opt/wa-booking-bot/data) '
+      'النقل إلى السيرفر بالشكل الموصوف في DEPLOYMENT.md (DATA_DIR=/opt/example-bot/data) '
       + 'يُطفئ الرسائل فوراً بعد التشغيل: البوت يستقبل ويُسجّل ويرد على قاعدة البيانات، '
       + 'لكنه لا يرسل ولا كلمة للعميل ولا إشعاراً للأدمن. '
       + 'الخطأ يظهر كـ"العميل لا يرد" لا كخطأ تقني.',

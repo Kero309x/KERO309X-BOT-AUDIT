@@ -1,0 +1,38 @@
+{
+  "//": "انسخ هذا الملف إلى audit.config.json (غير متتبَّع) وعدّل عليه. كل شخص يضيف مدخله هنا.",
+  "//subjects": "مفتاح كل مدخل هو معرّف الـsubject، ويظهر في المسارات evidence/<id>/ وفي الفهرس.",
+  "//priority": "متغيّرات البيئة تتقدّم على هذا الملف، وهذا الملف يتقدّم على الافتراضي.",
+  "defaultSubject": "wa-booking-bot",
+  "subjects": {
+    "wa-booking-bot": {
+      "title": "wa-booking-bot — متجر باقات وخدمات رقمية",
+      "description": "بوت واتساب لحجز باقات الاتصالات والخدمات الرقمية، مبني على بوابة OpenWA محلية وقاعدة SQLite.",
+      "botRepo": "D:/wa-booking-bot",
+      "dataDir": "D:/wa-booking-bot/data",
+      "dbFile": "bot.db",
+      "lockFile": "bot.lock",
+      "notes": "الحالة الأولى في هذه المجموعة. الأدلة P01 وP02 وP03 وP06 وP07 مكتوبة على هذا البوت تحديداً وتُستخدم كنماذج للتكييف على بوتات أخرى.",
+      "moneyPath": {
+        "bookingsTable": "bookings",
+        "claimsTable": "payment_claims",
+        "trustedPaymentsTable": "trusted_payments",
+        "couponRedemptionsTable": "coupon_redemptions",
+        "refundsTable": "refunds",
+        "digitalOrdersTable": "digital_orders",
+        "customersTable": "customers",
+        "ownerAccountsTable": "owner_accounts",
+        "ownerMembersTable": "owner_members",
+        "chatLogTable": "chat_log",
+        "paidStatus": "paid",
+        "smsVerifiedColumn": "sms_verified",
+        "refRawColumn": "sms_ref_id",
+        "refNormalizedColumn": "sms_ref_norm",
+        "providerColumn": "sms_provider",
+        "customerNameColumn": "customer_name",
+        "phoneColumns": ["requested_phone", "whatsapp_phone", "sender_phone"],
+        "bookingIdColumn": "id",
+        "chatIdColumn": "chat_id"
+      }
+    }
+  }
+}

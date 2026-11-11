@@ -11,7 +11,7 @@
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
-const { REPO_ROOT, EVIDENCE_DIR, say, section, finish, maskSource } = require('./_lib');
+const { cfg, REPO_ROOT, say, section, finish, maskSource } = require('./_lib');
 
 /**
  * يختصر مخرجات الاختبارات إلى ما يكوّن خط أساس مفيداً — بدون بيانات العملاء.
@@ -62,9 +62,8 @@ function run(cmd, args, label) {
   const summarised = label === 'npm-test' ? summariseTestOutput(raw) : summariseLintOutput(raw);
   const out = maskSource(summarised);
   try {
-    const dir = path.join(EVIDENCE_DIR, 'baseline');
-    fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, `${label}.txt`), out, 'utf8');
+    fs.mkdirSync(cfg.baselineDir, { recursive: true });
+    fs.writeFileSync(path.join(cfg.baselineDir, `${label}.txt`), out, 'utf8');
   } catch (err) {
     say(`تعذّر حفظ مخرجات ${label}: ${err.message}`);
   }
