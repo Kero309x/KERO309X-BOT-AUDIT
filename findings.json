@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T17:24:28.653Z",
+  "generatedAt": "2026-11-11T17:49:37.177Z",
   "findings": [
     {
       "id": "P01",
@@ -15,7 +15,7 @@
       ],
       "verdict": "REPRODUCED",
       "impact": "أي زائر يستطيع الحصول على منتج رقمي مجاناً بمجرد كتابة اسمين في حقل الاسم. الأثر ينتقل مباشرة إلى المسار المالي: المنتج يُشحن بدون دفعة، مع تسجيل sms_verified=true ما يفسد أي إحصاء للإيراد لاحقاً.",
-      "fix": "اربط البوابة بمعرّف المحادثة/الهاتف فقط واحذف فحص الاسم:\n```js\nconst MINA_CHAT_IDS = new Set(['161276441411718@lid']);\nconst MINA_PHONES = new Set(['01289086556']);\nfunction isMinaRamses(chatId, draft = {}) {\n  const id = String(chatId || '');\n  if (MINA_CHAT_IDS.has(id)) return true;\n  const phones = `${draft.phone || ''} ${draft.whatsappPhone || ''}`;\n  return [...MINA_PHONES].some((p) => phones.includes(p));\n}\n```",
+      "fix": "اربط البوابة بمعرّف المحادثة/الهاتف فقط واحذف فحص الاسم:\n```js\n// القيم تُقرأ من سجل العملاء الفعلي، وتبقى خارج المستودع.\nconst MINA_CHAT_IDS = new Set([/* chat id الخاص بالعميل */]);\nconst MINA_PHONES = new Set([/* رقم العميل */]);\nfunction isMinaRamses(chatId, draft = {}) {\n  const id = String(chatId || '');\n  if (MINA_CHAT_IDS.has(id)) return true;\n  const phones = `${draft.phone || ''} ${draft.whatsappPhone || ''}`;\n  return [...MINA_PHONES].some((p) => phones.includes(p));\n}\n```\nوحذف المعامل الثالث name من التوقيع لأنه لم يعد مستخدماً في الفحص.",
       "evidence": "proofs/P01-mina-gate-by-name.md"
     },
     {

@@ -8,7 +8,7 @@
  * كود الخروج: 0 = الخلل متحقق منه، 2 = غير متحقق.
  */
 
-const { say, section, finish, openDb, pseudonym } = require('./_lib');
+const { say, section, finish, openDb, pseudonym, maskLabel } = require('./_lib');
 
 function main() {
   const db = openDb();
@@ -35,7 +35,7 @@ function main() {
   say(`منها بلا صف payment_claims: ${orphanBookings.length}`);
   orphanBookings.slice(0, 15).forEach((r) => {
     say(`  ${pseudonym('BKG', r.id)}  chat=${pseudonym('CHAT', r.chat_id)}  amount=${r.payment_amount}  `
-      + `provider=${r.sms_provider || '-'}  txn=${pseudonym('TXN', r.transaction_id || '-')}`);
+      + `provider=${maskLabel(r.sms_provider || '-')}  txn=${pseudonym('TXN', r.transaction_id || '-')}`);
   });
   if (orphanBookings.length > 15) say(`  … و${orphanBookings.length - 15} صفاً آخر`);
 
@@ -92,7 +92,7 @@ function main() {
     WHERE b.status='paid' AND b.sms_verified=1 AND pc.id IS NULL
     GROUP BY b.sms_provider ORDER BY c DESC
   `).all();
-  minaRows.forEach((r) => say(`  provider="${r.sms_provider}" ⇒ ${r.c} حجز بلا مطالبة`));
+  minaRows.forEach((r) => say(`  provider="${maskLabel(r.sms_provider)}" ⇒ ${r.c} حجز بلا مطالبة`));
 
   const reproduced = orphanBookings.length > 0 || orphanPayments.length > 0;
 
@@ -109,22 +109,18 @@ function main() {
     expected:
       'أن يمرّ كل تأكيد دفع — بلا استثناء — عبر store.claimPaymentAtomically، '
       + 'فتُنشأ المطالبة داخل المعاملة نفسها.',
-    observed:
-      `حجوزات مدفوعة بلا payment_claims: ${orphanBookings.length}. `
-      + `دفعات claimed بلا payment_claims: ${orphanPayments.length}. `
-      + `حجوزات مدفوعة بلا sms_ref_norm: ${nullRefPaid} (0 حالياً). `
-      + `توزيع الـ18 بلا مطالبة حسب المزوّد: ${
-        orphanBookings.reduce((acc, r) => {
-          const k = r.sms_provider || '(غير محدد)';
-          acc[k] = (acc[k] || 0) + 1;
-          return acc;
-        }, {})
-        && Object.entries(orphanBookings.reduce((acc, r) => {
-          const k = r.sms_provider || '(غير محدد)';
-          acc[k] = (acc[k] || 0) + 1;
-          return acc;
-        }, {})).map(([k, v]) => `${k}=${v}`).join('، ')
-      }.`,
+    observed: (() => {
+      const byProvider = orphanBookings.reduce((acc, r) => {
+        const k = maskLabel(r.sms_provider || '(غير محدد)');
+        acc[k] = (acc[k] || 0) + 1;
+        return acc;
+      }, {});
+      const breakdown = Object.entries(byProvider).map(([k, v]) => `${k}=${v}`).join('، ');
+      return `حجوزات مدفوعة بلا payment_claims: ${orphanBookings.length}. `
+        + `دفعات claimed بلا payment_claims: ${orphanPayments.length}. `
+        + `حجوزات مدفوعة بلا sms_ref_norm: ${nullRefPaid} (0 حالياً). `
+        + `توزيع الـ${orphanBookings.length} بلا مطالبة حسب المزوّد (مُقنَّع): ${breakdown}.`;
+    })(),
     impact:
       'الدفعات المتحرّرة من سجل المطالبة لا يستطيع النظام منع إعادة صرفها. '
       + 'كما أن أي إحصاء يعتمد على payment_claims (عدد الحجوزات الموثّقة) أقل من الواقع، '

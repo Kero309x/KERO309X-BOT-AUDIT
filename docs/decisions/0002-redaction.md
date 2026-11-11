@@ -43,8 +43,15 @@ humans and are recognisable in a different way: the country prefix and the
 last two digits are kept, the middle is masked.
 
 ```
-01027367735  →  0102******35
+01012345678  →  0101*****78
 ```
+
+The same mask is applied to every number-shaped value that reaches published
+output, including numbers that appear inside quoted source code. Some of the
+audited functions embed a real phone number or a real chat ID as a literal,
+and printing the function verbatim would otherwise republish it. The
+`maskSource` helper in `scripts/proofs/_lib.js` applies the mask at the point
+where a line is printed, so no proof can bypass it by accident.
 
 Amounts, booking statuses, provider names, match methods and timestamps are
 published verbatim. A finding about whether a payment matched cannot be
@@ -62,7 +69,7 @@ environment. The capture script never reads the live database.
 
 - The evidence stays checkable: a reader with access to the real database can
   reproduce the counts and see the same pseudonyms.
-- Cross-proof corroboration works. P04 shows that 14 of the 18 bookings
+- Cross-proof corroboration works. P04 shows that most of the bookings
   without a claim row carry the free-fulfilment provider string, and P01 shows
   how that provider string gets written — the two findings connect only
   because the identifiers are stable.

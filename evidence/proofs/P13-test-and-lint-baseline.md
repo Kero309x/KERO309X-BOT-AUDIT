@@ -15,7 +15,7 @@
 
 ## Observed
 
-الاختبارات: 808 (ناجحة 806، فاشلة 2، متخطّاة 0) بمدة 106038.3052 ms. lint: 1 أخطاء و 202 تحذيراً بمدة 9 ثانية. AGENTS.md يذكر 398 اختبار بينما الواقع 808.
+الاختبارات: 808 (ناجحة 807، فاشلة 1، متخطّاة 0) بمدة 102672.7226 ms. lint: 1 أخطاء و 202 تحذيراً بمدة 14 ثانية. AGENTS.md يذكر 398 اختبار بينما الواقع 808.
 
 ## Impact
 
@@ -32,22 +32,20 @@
 يُحفظ المخرجات الكاملة في evidence/baseline/.
 
 --- npm run lint ---
-المدة: 9 ثانية
+المدة: 14 ثانية
 الملخص: ✖ 203 problems (1 error, 202 warnings)
 كود الخروج: 1
 أخطاء: 1 — تحذيرات: 202
 
 --- npm test ---
-المدة: 107 ثانية
-الاختبارات: 808 — الناجحة: 806 — الفاشلة: 2 — المتخطّاة: 0
-duration_ms: 106038.3052
+المدة: 104 ثانية
+الاختبارات: 808 — الناجحة: 807 — الفاشلة: 1 — المتخطّاة: 0
+duration_ms: 102672.7226
 كود الخروج: 1
 
 --- الاختبارات الفاشلة ---
   test at test\audio_transcriber.test.js:17:1
-  ✖ transcribe.py: normalize_spoken_digits converts spoken Egyptian numbers to digits (533.6447ms)
-  test at test\payment_shadow_mode.test.js:445:1
-  ✖ Phase 5.1 Req 13: HTTPSMS polling pipeline invokes shadow evaluator and records incoming SMS (25506.9898ms)
+  ✖ transcribe.py: normalize_spoken_digits converts spoken Egyptian numbers to digits (546.9656ms)
 
 --- ملاحظة على توثيق المشروع ---
 AGENTS.md يذكر "398" اختبار. الواقع المُقاس: 808.

@@ -35,7 +35,7 @@ store.claimPaymentAtomically يكتب bookings.status='paid' بـ SQL مباشر
 حالة الدفعة قبل: unclaimed
 
 --- تشغيل المسار الذرّي الفعلي: store.claimPaymentAtomically ---
-نتيجة claimPaymentAtomically: {"success":true,"bookingId":"BKG-P05","trustedPaymentId":1,"claimedAt":"2026-11-11T17:21:37.166Z","amount":100,"matchMethod":"exact_ref"}
+نتيجة claimPaymentAtomically: {"success":true,"bookingId":"BKG-P05","trustedPaymentId":1,"claimedAt":"2026-11-11T17:47:38.373Z","amount":100,"matchMethod":"exact_ref"}
 
 --- الحالة بعد المطالبة الذرّية ---
 حالة الحجز: paid  (sms_verified=1)

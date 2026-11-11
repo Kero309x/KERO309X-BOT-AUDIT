@@ -47,6 +47,39 @@ function maskToken(value) {
   return `${s[0]}${'*'.repeat(Math.min(6, s.length - 2))}${s[s.length - 1]}`;
 }
 
+/**
+ * يخفي أرقام الهواتف ومعرّفات المحادثات داخل أي نص — مصدر أو مخرجات اختبار.
+ *
+ * السبب: بعض الأكواد المُدقَّقة تحتوي أرقاماً حقيقية مكتوبة داخلها
+ * (رقم عميل في شرط، أرقام المتجر في سجل الاختبارات). طباعة المصدر كما هو
+ * يعني نشر هذه الأرقام في مستودع عام.
+ *
+ * القواعد بالترتيب —前面的 matched أولاً:
+ *   +201234567890  رقم دولي
+ *   01234567890    رقم محمول مصري
+ *   201234567890@c.us / @lid   معرّف محادثة
+ *   201234567890   معرّف محادثة بلا لاحقة
+ *   123456789012345  معرّف LID (15 رقماً)
+ */
+function maskSource(text) {
+  if (text === null || text === undefined) return text;
+  return String(text)
+    .replace(/\+20(1[0125]\d{8})\b/g, (m, n) => `+20${maskPhone(n)}`)
+    .replace(/\b(01[0125]\d{8})\b/g, (m) => maskPhone(m))
+    .replace(/\b(20\d{10})@(c\.us|lid)\b/g, (m, id, dom) => `${id.slice(0, 4)}******${id.slice(-2)}@${dom}`)
+    .replace(/\b(20\d{10})\b/g, (m, id) => `${id.slice(0, 4)}******${id.slice(-2)}`)
+    .replace(/\b(\d{15})\b/g, (m) => `${m.slice(0, 6)}*******${m.slice(-2)}`);
+}
+
+/**
+ * يخفي الأسماء داخل التسميات النصية (مثل اسم مزوّد الخدمة).
+ * كل كلمة من 4 محارف فأكثر تُستبدل بحرفها الأول وثلاث نجوم.
+ */
+function maskLabel(text) {
+  if (!text) return '';
+  return String(text).replace(/[\p{L}\p{N}]{4,}/gu, (w) => `${w[0]}***`);
+}
+
 /* ------------------------------------------------------------------ */
 /* قاعدة البيانات — للقراءة فقط                                       */
 /* ------------------------------------------------------------------ */
@@ -105,7 +138,8 @@ const lines = [];
 
 /** يطبع سطر في تقرير الـ finding الحالي. */
 function say(text = '') {
-  lines.push(text);
+  // كل نص مطبوع يمرّ بقناع الأرقام — لا يُنشر رقم هاتف أو معرّف محادثة.
+  lines.push(typeof text === 'string' ? maskSource(text) : text);
 }
 
 /**
@@ -136,23 +170,23 @@ function report(f) {
   out.push('');
   out.push('## Claim');
   out.push('');
-  out.push(f.claim);
+  out.push(maskSource(f.claim));
   out.push('');
   out.push('## Expected');
   out.push('');
-  out.push(f.expected);
+  out.push(maskSource(f.expected));
   out.push('');
   out.push('## Observed');
   out.push('');
-  out.push(f.observed);
+  out.push(maskSource(f.observed));
   out.push('');
   out.push('## Impact');
   out.push('');
-  out.push(f.impact);
+  out.push(maskSource(f.impact));
   out.push('');
   out.push('## Fix');
   out.push('');
-  out.push(f.fix);
+  out.push(maskSource(f.fix));
   out.push('');
   out.push('## Raw output');
   out.push('');
@@ -188,13 +222,13 @@ function finish(f) {
     idx.findings.push({
       id: f.id,
       slug: f.slug,
-      title: f.title,
+      title: maskSource(f.title),
       severity: f.severity,
       area: f.area,
       refs: f.refs,
       verdict: f.reproduced ? 'REPRODUCED' : 'NOT REPRODUCED',
-      impact: f.impact,
-      fix: f.fix,
+      impact: maskSource(f.impact),
+      fix: maskSource(f.fix),
       evidence: `proofs/${f.id}-${f.slug}.md`,
     });
     idx.findings.sort((a, b) => {
@@ -225,6 +259,8 @@ module.exports = {
   pseudonym,
   maskPhone,
   maskToken,
+  maskSource,
+  maskLabel,
   requireDb,
   openDb,
   closeDb,

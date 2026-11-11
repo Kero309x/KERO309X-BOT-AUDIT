@@ -11,7 +11,40 @@
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
-const { REPO_ROOT, EVIDENCE_DIR, say, section, finish } = require('./_lib');
+const { REPO_ROOT, EVIDENCE_DIR, say, section, finish, maskSource } = require('./_lib');
+
+/**
+ * يختصر مخرجات الاختبارات إلى ما يكوّن خط أساس مفيداً — بدون بيانات العملاء.
+ *
+ *why: الاختبارات تقرأ القاعدة الحقيقية أحياناً، فالمخرجات الكاملة تحتوي
+ * أسماء عملاء ومعرّفات محادثات حقيقية. الخط الأساسي يحتاج الأرقام
+ * والاختبار الفاشل، لا السجل.
+ */
+function summariseTestOutput(out) {
+  const lines = String(out).split(/\r?\n/);
+  const keep = [];
+  let inFailing = false;
+  for (const line of lines) {
+    if (/^> /.test(line) || /^\[run-tests\]/.test(line)) { keep.push(line); continue; }
+    if (/^ℹ\s/.test(line)) { keep.push(line); continue; }
+    if (/failing tests:/.test(line)) { inFailing = true; keep.push(line); continue; }
+    if (inFailing) {
+      if (/^\s*✖/.test(line) || /^\s*at /.test(line) || /^test at /.test(line)) { keep.push(line); continue; }
+      if (/^\S/.test(line) && line.trim() !== '') { inFailing = false; }
+    }
+  }
+  return keep.join('\n');
+}
+
+/** يختصر مخرجات ESLint إلى الملخص وقائمة الأخطاء/التحذيرات. */
+function summariseLintOutput(out) {
+  const lines = String(out).split(/\r?\n/);
+  const keep = [];
+  for (const line of lines) {
+    if (/problems?\s*\(|✖/.test(line) || /warning\s+/.test(line) || /error\s+/.test(line)) keep.push(line);
+  }
+  return keep.join('\n');
+}
 
 function run(cmd, args, label) {
   const started = Date.now();
@@ -24,7 +57,10 @@ function run(cmd, args, label) {
     env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1' },
   });
   const ms = Date.now() - started;
-  const out = `${res.stdout || ''}${res.stderr || ''}`;
+  const raw = `${res.stdout || ''}${res.stderr || ''}`;
+  // ملخّص فقط: مخرجات الاختبارات الكاملة تحتوي بيانات عملاء حقيقية.
+  const summarised = label === 'npm-test' ? summariseTestOutput(raw) : summariseLintOutput(raw);
+  const out = maskSource(summarised);
   try {
     const dir = path.join(EVIDENCE_DIR, 'baseline');
     fs.mkdirSync(dir, { recursive: true });
@@ -32,7 +68,7 @@ function run(cmd, args, label) {
   } catch (err) {
     say(`تعذّر حفظ مخرجات ${label}: ${err.message}`);
   }
-  return { out, ms, status: res.status };
+  return { out, raw, ms, status: res.status };
 }
 
 function main() {

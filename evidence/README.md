@@ -26,6 +26,24 @@ node scripts/build-findings-docs.js       # docs/findings/*.md
 `run-all.js` exits `0` when every proof ran without error. It does not fail
 because a defect is present — that is the expected state of an unfixed system.
 
+## Checking for leaks
+
+Before publishing anything, run the leak scan:
+
+```bash
+node scripts/leak-scan.js
+```
+
+It reads every identifier that actually exists in the audited bot's live
+database — 267 phone numbers, 635 names, 474 chat IDs, 369 references — and
+checks each one against every text file in this repository. It exits `1` and
+names the offending file if any of them appears.
+
+The scan is the reason the baseline is published as a summary rather than as
+a raw log: the test suite reads the live database on some paths, so its
+output contains real customer names. The summary carries the numbers and the
+failing test names, which is what a baseline needs, and none of that data.
+
 ## Reading the verdicts
 
 Each proof report carries a `Verdict` line.

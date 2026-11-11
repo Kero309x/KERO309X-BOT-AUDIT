@@ -11,7 +11,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { REPO_ROOT, say, section, finish, openDb, pseudonym } = require('./_lib');
+const { REPO_ROOT, say, section, finish, openDb, pseudonym, maskLabel } = require('./_lib');
 
 const FLOW = path.join(REPO_ROOT, 'src', 'flow.js');
 
@@ -78,13 +78,27 @@ function main() {
   say(`isMinaRamses(...) => ${normalResult}`);
 
   section('الحالة 2 — عميل يكتب الاسم الذي يفتح البوابة');
-  const attackNames = ['mina ramses', 'Mina Ramsis', 'mina  ramses', 'مينا رمسيس'];
+  // المدخلات تُشتقّ من النمط الموجود في المصدر نفسه — لا نكتب اسم العميل حرفياً.
+  const patternMatch = fnText.match(/\/(.+?)\/i\.test\(allNames\)/);
+  const pattern = patternMatch ? patternMatch[1] : '';
+  const alternatives = pattern.split('|').map((a) => a.replace(/\\s\*/g, ' ').trim()).filter(Boolean);
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const attackNames = [
+    ...alternatives,
+    cap(alternatives[alternatives.length - 1] || ''),
+    (alternatives[0] || '').replace(/ /g, '  '),
+  ].filter(Boolean);
+
+  // الأسماء مطابقة لعميل حقيقي ⇒ لا تُنشر كاملة.
+  const maskLiteral = (s) => `${s[0]}${'*'.repeat(Math.max(1, s.length - 1))} (len=${s.length})`;
   let opened = false;
-  for (const n of attackNames) {
+  attackNames.forEach((n, i) => {
     const r = isMinaRamses(ATTACKER_CHAT, { customerName: n }, n);
-    say(`draft.customerName = ${JSON.stringify(n)}  =>  ${r}`);
     if (r) opened = true;
-  }
+    say(`المدخل #${i + 1} [${maskLiteral(n)}]  =>  ${r}`);
+  });
+  say('(المدخلات مشتقّة من النمط الموجود في src/flow.js نفسه — مخفية جزئياً هنا)');
+  say(`عدد البدائل في النمط: ${alternatives.length} — كلها تفتح البوابة.`);
 
   section('الحالة 3 — الحقل الذي يمرره العميل فعليًا');
   say('draft.customerName مصدره: state NAME — العميل يكتب الاسم بنفسه.');
@@ -122,7 +136,7 @@ function main() {
       for (const r of rows) {
         say(
           `  ${pseudonym('BKG', r.id)}  chat=${pseudonym('CHAT', r.chat_id)}  `
-          + `ref=${r.sms_ref_id}  amount=${r.payment_amount}  status=${r.status}`,
+          + `ref=${pseudonym('REF', r.sms_ref_id)}  amount=${r.payment_amount}  status=${r.status}`,
         );
       }
     }
@@ -132,7 +146,7 @@ function main() {
         .all();
       say(`حجوزات بدالة مزوّد "تسجيل خاص": ${provRows.length}`);
       for (const r of provRows) {
-        say(`  ${pseudonym('BKG', r.id)}  status=${r.status}  provider=${r.sms_provider}`);
+        say(`  ${pseudonym('BKG', r.id)}  status=${r.status}  provider=${maskLabel(r.sms_provider)}`);
       }
     }
   } catch (err) {
@@ -156,7 +170,8 @@ function main() {
       'أن تكون البوابة مربوطة بمعرّف المحادثة أو برقم الهاتف المسجّل فقط، '
       + 'ولا تُفتح أبداً بمجرد كتابة العميل لاسمه.',
     observed:
-      `عميل بمعرّف محادثة جديد (${ATTACKER_CHAT}) يكتب "mina ramses" في حقل الاسم ⇒ `
+      `عميل بمعرّف محادثة جديد (${ATTACKER_CHAT}) يكتب اسماً يطابق النمط `
+      + '/mina\\s*ramsis|mina\\s*ramses/i في حقل الاسم ⇒ '
       + 'isMinaRamses => true، والحجز ينتقل إلى markPaymentVerified({ amount: 0 }) '
       + 'فتصبح حالته paid مع smsVerified=true ومعالجة المنتج الرقمي تُنفَّذ.',
     impact:
@@ -166,15 +181,17 @@ function main() {
     fix:
       'اربط البوابة بمعرّف المحادثة/الهاتف فقط واحذف فحص الاسم:\n'
       + '```js\n'
-      + "const MINA_CHAT_IDS = new Set(['161276441411718@lid']);\n"
-      + "const MINA_PHONES = new Set(['01289086556']);\n"
+      + '// القيم تُقرأ من سجل العملاء الفعلي، وتبقى خارج المستودع.\n'
+      + "const MINA_CHAT_IDS = new Set([/* chat id الخاص بالعميل */]);\n"
+      + "const MINA_PHONES = new Set([/* رقم العميل */]);\n"
       + 'function isMinaRamses(chatId, draft = {}) {\n'
       + "  const id = String(chatId || '');\n"
       + '  if (MINA_CHAT_IDS.has(id)) return true;\n'
       + "  const phones = `${draft.phone || ''} ${draft.whatsappPhone || ''}`;\n"
       + '  return [...MINA_PHONES].some((p) => phones.includes(p));\n'
       + '}\n'
-      + '```',
+      + '```\n'
+      + 'وحذف المعامل الثالث name من التوقيع لأنه لم يعد مستخدماً في الفحص.',
     reproduced,
   });
 }

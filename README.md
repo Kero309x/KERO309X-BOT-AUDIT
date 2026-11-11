@@ -84,9 +84,11 @@ gate and reaches `markPaymentVerified({ amount: 0 })`, which sets the booking
 to `paid` with `sms_verified = 1`.
 
 [P04](evidence/proofs/P04-paid-without-payment-claim.md) then corroborates it
-from the live database: of 53 bookings marked paid with SMS verification, 18
-have no `payment_claims` row, and 14 of those 18 carry the free-fulfilment
-provider string. The free path is not hypothetical — it has been used.
+from the live database: of the bookings marked paid with SMS verification, a
+significant share have no `payment_claims` row, and most of those carry the
+free-fulfilment provider string. The free path is not hypothetical — it has
+been used. The exact counts move as the bot runs; the proof reports the
+current figures.
 
 ## Running the proofs
 

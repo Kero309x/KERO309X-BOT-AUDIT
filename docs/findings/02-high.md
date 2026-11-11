@@ -25,7 +25,7 @@ These are safety properties the design claims to hold and does not. None of them
 
 ### Observed
 
-حجوزات مدفوعة بلا payment_claims: 18. دفعات claimed بلا payment_claims: 3. حجوزات مدفوعة بلا sms_ref_norm: 0 (0 حالياً). توزيع الـ18 بلا مطالبة حسب المزوّد: مفتوح (مينا رمسيس)=13، Banque Misr (InstaPay)=5.
+حجوزات مدفوعة بلا payment_claims: 18. دفعات claimed بلا payment_claims: 3. حجوزات مدفوعة بلا sms_ref_norm: 0 (0 حالياً). توزيع الـ18 بلا مطالبة حسب المزوّد (مُقنَّع): م*** (م*** ر***)=13، B*** M*** (I***)=5.
 
 ### Impact
 
@@ -51,21 +51,21 @@ id, booking_id, trusted_payment_id, claimed_at, claimed_amount, match_method, ev
 --- الحاجز 1 — حجوزات status=paid و sms_verified=1 بلا صف payment_claims ---
 عدد الحجوزات المدفوعة بالمطابقة: 53
 منها بلا صف payment_claims: 18
-  BKG-137d4fb4  chat=CHAT-2f25a24b  amount=750  provider=مفتوح (مينا رمسيس)  txn=TXN-d7f94889
-  BKG-678fc791  chat=CHAT-14cca865  amount=330  provider=Banque Misr (InstaPay)  txn=TXN-16924bf4
-  BKG-ed37a21b  chat=CHAT-2f25a24b  amount=750  provider=مفتوح (مينا رمسيس)  txn=TXN-2ed3c613
-  BKG-82fe6e51  chat=CHAT-2f25a24b  amount=300  provider=مفتوح (مينا رمسيس)  txn=TXN-df425a80
-  BKG-6e195f5f  chat=CHAT-2f25a24b  amount=250  provider=مفتوح (مينا رمسيس)  txn=TXN-e709bd3c
-  BKG-017683df  chat=CHAT-2f25a24b  amount=150  provider=مفتوح (مينا رمسيس)  txn=TXN-3f322a18
-  BKG-c52dcab1  chat=CHAT-2f25a24b  amount=300  provider=مفتوح (مينا رمسيس)  txn=TXN-00001691
-  BKG-ac397bd6  chat=CHAT-2f25a24b  amount=300  provider=مفتوح (مينا رمسيس)  txn=TXN-aa26d706
-  BKG-10597d17  chat=CHAT-4d5b84e3  amount=330  provider=Banque Misr (InstaPay)  txn=TXN-88252c3a
-  BKG-ad74981b  chat=CHAT-2f25a24b  amount=300  provider=مفتوح (مينا رمسيس)  txn=TXN-e6a5c6c3
-  BKG-5db90a93  chat=CHAT-2f25a24b  amount=1000  provider=مفتوح (مينا رمسيس)  txn=TXN-7c972370
-  BKG-066346d9  chat=CHAT-2f25a24b  amount=750  provider=مفتوح (مينا رمسيس)  txn=TXN-44eb9ac7
-  BKG-e2851d37  chat=CHAT-2f25a24b  amount=500  provider=مفتوح (مينا رمسيس)  txn=TXN-e39fb594
-  BKG-ff99d4c0  chat=CHAT-2f25a24b  amount=300  provider=مفتوح (مينا رمسيس)  txn=TXN-afc8dd3d
-  BKG-46811204  chat=CHAT-2f25a24b  amount=500  provider=مفتوح (مينا رمسيس)  txn=TXN-4a6831aa
+  BKG-137d4fb4  chat=CHAT-2f25a24b  amount=750  provider=م*** (م*** ر***)  txn=TXN-d7f94889
+  BKG-678fc791  chat=CHAT-14cca865  amount=330  provider=B*** M*** (I***)  txn=TXN-16924bf4
+  BKG-ed37a21b  chat=CHAT-2f25a24b  amount=750  provider=م*** (م*** ر***)  txn=TXN-2ed3c613
+  BKG-82fe6e51  chat=CHAT-2f25a24b  amount=300  provider=م*** (م*** ر***)  txn=TXN-df425a80
+  BKG-6e195f5f  chat=CHAT-2f25a24b  amount=250  provider=م*** (م*** ر***)  txn=TXN-e709bd3c
+  BKG-017683df  chat=CHAT-2f25a24b  amount=150  provider=م*** (م*** ر***)  txn=TXN-3f322a18
+  BKG-c52dcab1  chat=CHAT-2f25a24b  amount=300  provider=م*** (م*** ر***)  txn=TXN-00001691
+  BKG-ac397bd6  chat=CHAT-2f25a24b  amount=300  provider=م*** (م*** ر***)  txn=TXN-aa26d706
+  BKG-10597d17  chat=CHAT-4d5b84e3  amount=330  provider=B*** M*** (I***)  txn=TXN-88252c3a
+  BKG-ad74981b  chat=CHAT-2f25a24b  amount=300  provider=م*** (م*** ر***)  txn=TXN-e6a5c6c3
+  BKG-5db90a93  chat=CHAT-2f25a24b  amount=1000  provider=م*** (م*** ر***)  txn=TXN-7c972370
+  BKG-066346d9  chat=CHAT-2f25a24b  amount=750  provider=م*** (م*** ر***)  txn=TXN-44eb9ac7
+  BKG-e2851d37  chat=CHAT-2f25a24b  amount=500  provider=م*** (م*** ر***)  txn=TXN-e39fb594
+  BKG-ff99d4c0  chat=CHAT-2f25a24b  amount=300  provider=م*** (م*** ر***)  txn=TXN-afc8dd3d
+  BKG-46811204  chat=CHAT-2f25a24b  amount=500  provider=م*** (م*** ر***)  txn=TXN-4a6831aa
   … و3 صفاً آخر
 
 --- الحاجز 2 — دفعات trusted_payments بحالة claimed بلا صف payment_claims ---
@@ -91,8 +91,8 @@ bookings.markPaymentVerified (src/bookings.js:715) تكتب status=paid و sms_v
 مطبّعاً يفتح الصرف المزدوج من جديد دون أي خطأ ظاهر.
 
 --- تأييد متقاطع مع P01 ---
-  provider="مفتوح (مينا رمسيس)" ⇒ 13 حجز بلا مطالبة
-  provider="Banque Misr (InstaPay)" ⇒ 5 حجز بلا مطالبة
+  provider="م*** (م*** ر***)" ⇒ 13 حجز بلا مطالبة
+  provider="B*** M*** (I***)" ⇒ 5 حجز بلا مطالبة
 ```
 
 ---
@@ -130,7 +130,7 @@ store.claimPaymentAtomically يكتب bookings.status='paid' بـ SQL مباشر
 حالة الدفعة قبل: unclaimed
 
 --- تشغيل المسار الذرّي الفعلي: store.claimPaymentAtomically ---
-نتيجة claimPaymentAtomically: {"success":true,"bookingId":"BKG-P05","trustedPaymentId":1,"claimedAt":"2026-11-11T17:21:37.166Z","amount":100,"matchMethod":"exact_ref"}
+نتيجة claimPaymentAtomically: {"success":true,"bookingId":"BKG-P05","trustedPaymentId":1,"claimedAt":"2026-11-11T17:47:38.373Z","amount":100,"matchMethod":"exact_ref"}
 
 --- الحالة بعد المطالبة الذرّية ---
 حالة الحجز: paid  (sms_verified=1)

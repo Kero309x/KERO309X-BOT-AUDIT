@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T17:23:34.565Z",
+  "generatedAt": "2026-11-11T17:49:37.190Z",
   "total": 13,
   "reproduced": 13,
   "clean": 0,
@@ -11,7 +11,7 @@
       "verdict": "REPRODUCED",
       "severity": "critical",
       "title": "بوابة التفعيل الخاص تُفتح باسم يكتبه العميل نفسه",
-      "ms": 146,
+      "ms": 147,
       "exitCode": 0
     },
     {
@@ -20,7 +20,7 @@
       "verdict": "REPRODUCED",
       "severity": "critical",
       "title": "مسار إعادة الشراء الرقمي في اللوحة يخرج دائماً قبل الشراء",
-      "ms": 160,
+      "ms": 141,
       "exitCode": 0
     },
     {
@@ -29,7 +29,7 @@
       "verdict": "REPRODUCED",
       "severity": "critical",
       "title": "webhook الخاص بالرسائل البنكية مفتوح في كل بيئة غير production",
-      "ms": 125,
+      "ms": 114,
       "exitCode": 0
     },
     {
@@ -38,7 +38,7 @@
       "verdict": "REPRODUCED",
       "severity": "high",
       "title": "حجوزات مدفوعة بلا صف payment_claims يربطها بالدفعة",
-      "ms": 161,
+      "ms": 139,
       "exitCode": 0
     },
     {
@@ -47,7 +47,7 @@
       "verdict": "REPRODUCED",
       "severity": "high",
       "title": "المطالبة الذرّية للدفع لا تستهلك الكوبون",
-      "ms": 207,
+      "ms": 193,
       "exitCode": 0
     },
     {
@@ -56,7 +56,7 @@
       "verdict": "REPRODUCED",
       "severity": "high",
       "title": "مطابقة الاسم بالعتمة تخلط أسماءً مختلفة تماماً",
-      "ms": 164,
+      "ms": 156,
       "exitCode": 0
     },
     {
@@ -65,7 +65,7 @@
       "verdict": "REPRODUCED",
       "severity": "medium",
       "title": "التحقق من التفعيل الرقمي معطّل: حاجز خاطئ + استعلام على عمود غير موجود",
-      "ms": 144,
+      "ms": 215,
       "exitCode": 0
     },
     {
@@ -74,7 +74,7 @@
       "verdict": "REPRODUCED",
       "severity": "high",
       "title": "اعتماديات في مسار الإنتاج غير معلنة أو مُعلنة dev فقط",
-      "ms": 185,
+      "ms": 237,
       "exitCode": 0
     },
     {
@@ -83,7 +83,7 @@
       "verdict": "REPRODUCED",
       "severity": "high",
       "title": "تغيير مسار DATA_DIR يحوّل كل الإرسال إلى وضع المحاكاة",
-      "ms": 110,
+      "ms": 137,
       "exitCode": 0
     },
     {
@@ -92,7 +92,7 @@
       "verdict": "REPRODUCED",
       "severity": "critical",
       "title": "ملف القفل يحمل PID من ويندوز فيمنع إقلاع البوت على السيرفر",
-      "ms": 116,
+      "ms": 126,
       "exitCode": 0
     },
     {
@@ -101,7 +101,7 @@
       "verdict": "REPRODUCED",
       "severity": "medium",
       "title": "استرداد دفعة من محفظة العميل عبر اللوحة لا يُعيد الرصيد",
-      "ms": 274,
+      "ms": 260,
       "exitCode": 0
     },
     {
@@ -110,7 +110,7 @@
       "verdict": "REPRODUCED",
       "severity": "info",
       "title": "ضمانات المسار المالي التي تعمل فعلاً (شاهد إيجابي)",
-      "ms": 239,
+      "ms": 264,
       "exitCode": 0
     },
     {
@@ -119,7 +119,7 @@
       "verdict": "REPRODUCED",
       "severity": "info",
       "title": "خط أساس الاختبارات والتدقيق الثابت",
-      "ms": 116118,
+      "ms": 117380,
       "exitCode": 0
     }
   ]
