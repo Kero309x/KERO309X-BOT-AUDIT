@@ -1,0 +1,43 @@
+# Local checkout of the audited bot — never commit it
+wa-booking-bot/
+BOT_REPO/
+*.bot/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# The audited bot's runtime data
+data/
+*.db
+*.db-*
+*.lock
+*.secret-key
+
+# Receipts, invoices and backups of the audited system
+receipts/
+invoices/
+backups/
+*.pdf
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editors and OS noise
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+*.swp
+
+# Logs and crash dumps
+*.log
+hs_err_pid*
+
+# Scratch
+tmp/
+scratch/
+*.tmp

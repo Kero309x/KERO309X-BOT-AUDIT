@@ -1,0 +1,433 @@
+
+> wa-booking-bot@1.0.0 lint
+> eslint .
+
+
+D:\wa-booking-bot\scripts\analyze_cycle7_whatsapp.js
+  44:11  warning  'chatRec' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\audit_cycle25.js
+  2:7  warning  'path' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\audit_full_ui.js
+  2:11  warning  'window' is defined but never used   no-unused-vars
+  2:47  warning  'Element' is defined but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\audit_orphan_senders.js
+  3:9  warning  'resolveCustomerChatId' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\build_perfect_packing.js
+  21:7  warning  'bins' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\check_all_25_lines.js
+   3:24  warning  'inspectVodafoneLine' is assigned a value but never used                      no-unused-vars
+  42:20  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\check_real_vodafone.js
+  36:21  warning  'e' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\check_tables.js
+  10:11  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+  23:12  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\debug_ocr_direct.js
+   1:7    warning  'fs' is assigned a value but never used                                   no-unused-vars
+  67:115  warning  'stderr' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\deep_audit_cycle7.js
+  11:12  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\dump_httpsms_all.js
+  2:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\find_amr.js
+  2:7  warning  'httpsms' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\inspect-dashboard.js
+  3:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\inspect_chatlogs.js
+  1:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\inspect_earlier_failed.js
+  1:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\inspect_ops_and_handoffs.js
+  1:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\inspect_specific_bookings.js
+  1:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\inspect_specific_receipts.js
+  3:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\live_scenarios_demo.js
+  32:7  warning  'chats' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\mathematical_analysis.js
+  71:7  warning  'remaining' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\ocr_three_images.js
+  1:7  warning  'fs' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\parse_cycle7_status.js
+   9:5  warning  'confirmedCount' is assigned a value but never used    no-unused-vars
+  10:5  warning  'notRenewingCount' is assigned a value but never used  no-unused-vars
+  11:5  warning  'changedPkgCount' is assigned a value but never used   no-unused-vars
+  12:5  warning  'pendingCount' is assigned a value but never used      no-unused-vars
+  20:3  warning  'totalMembers' is assigned a value but never used      no-unused-vars
+
+D:\wa-booking-bot\scripts\prepare_live_chats.js
+   1:7  warning  'db' is assigned a value but never used       no-unused-vars
+  24:9  warning  'current' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\proofs\P03-sms-webhook-fail-open.js
+  59:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\P05-coupon-not-consumed-on-atomic-claim.js
+  22:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+  24:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\P06-name-fuzzy-match-collides.js
+  15:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+  66:5  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\P08-undeclared-production-dependency.js
+  104:7  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\P10-stale-lock-pid-blocks-boot.js
+  13:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\proofs\P11-refund-does-not-restore-wallet.js
+  56:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+  58:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+  60:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\P12-money-path-guards-that-hold.js
+  62:3  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\_lib.js
+  62:5  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+  67:7  error    Definition for rule 'import/no-dynamic-require' was not found                      import/no-dynamic-require
+  67:7  warning  Unused eslint-disable directive (no problems were reported from 'global-require')
+
+D:\wa-booking-bot\scripts\proofs\capture-screenshots.js
+  16:9  warning  'spawn' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\reassign_cycle25_to_proper_owners.js
+   6:10   warning  'sleep' is defined but never used                                    no-unused-vars
+  85:113  warning  'a' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\replay_real_failed_cases.js
+    6:7  warning  'crypto' is assigned a value but never used         no-unused-vars
+   24:7  warning  'httpsms' is assigned a value but never used        no-unused-vars
+  274:9  warning  'httpsmsStatus' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\retry_failed_invites.js
+  36:9  warning  'success' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\run_cross_flow_simulation.js
+  45:7  warning  'queue' is assigned a value but never used            no-unused-vars
+  47:7  warning  'customers' is assigned a value but never used        no-unused-vars
+  48:7  warning  'paymentVerifier' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\run_multi_agent_simulation.js
+   32:7  warning  'queue' is assigned a value but never used        no-unused-vars
+   34:7  warning  'customers' is assigned a value but never used    no-unused-vars
+  170:9  warning  's1' is assigned a value but never used           no-unused-vars
+  171:9  warning  's2' is assigned a value but never used           no-unused-vars
+  192:5  warning  'sPhoneStep' is assigned a value but never used   no-unused-vars
+  229:9  warning  'validCoupon' is assigned a value but never used  no-unused-vars
+  453:9  warning  'sPackages' is assigned a value but never used    no-unused-vars
+
+D:\wa-booking-bot\scripts\safe_send_campaign.js
+  19:7  warning  'db' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\send_c25_reassurance.js
+  9:7  warning  'queue' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\send_cycle7_reminders.js
+  9:7  warning  'queue' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\setup_fady_and_notify.js
+  5:7  warning  'bookings' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\simulate_packing.js
+   2:7  warning  'fs' is assigned a value but never used          no-unused-vars
+  45:7  warning  'carole' is assigned a value but never used      no-unused-vars
+  46:7  warning  'minaMorris' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\solve_distribution.js
+  26:7  warning  'bins' is assigned a value but never used             no-unused-vars
+  37:9  warning  'protectedPhones' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\solve_owners_5_and_6.js
+  83:38  warning  'idx' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\take_screenshots.js
+   3:7  warning  'fs' is assigned a value but never used    no-unused-vars
+  17:9  warning  'page' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_catalog.js
+  39:16  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_f5_triggers.js
+  30:9  warning  'member' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_family_hosts.js
+  51:25  warning  'e' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_fixture_ocr.js
+  2:7  warning  'path' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_group_query.js
+  46:18  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_live_cg_query.js
+  49:16  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\scripts\test_optimizer.js
+  64:7  warning  'remaining' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\verify_candidate_plan.js
+  73:5  warning  'totalGb' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\verify_cycle7_packing.js
+  49:5  warning  'totalUsedMin' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\verify_final_owners.js
+   7:7  warning  'o5' is assigned a value but never used  no-unused-vars
+  18:7  warning  'o6' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\scripts\verify_packing_plan.js
+    5:7  warning  'owners' is assigned a value but never used    no-unused-vars
+  113:5  warning  'totalMin' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\src\admin\layout.js
+    51:1  warning  Function 'layout' has too many lines (2742). Maximum allowed is 220  max-lines-per-function
+  1545:1  warning  File has too many lines (2777). Maximum allowed is 1500              max-lines
+
+D:\wa-booking-bot\src\admin\owners.js
+  28:1  warning  Function 'renderOwnersPage' has too many lines (673). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\owners_cycles.js
+  206:1  warning  Function 'renderCycleProfitHtml' has too many lines (342). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\bookings.js
+  23:1  warning  Function 'createBookingsRouter' has too many lines (564). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\catalog.js
+  13:1   warning  Function 'createCatalogRouter' has too many lines (865). Maximum allowed is 220  max-lines-per-function
+  18:25  warning  Arrow function has too many lines (559). Maximum allowed is 220                  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\coupons.js
+  18:1   warning  Function 'createCouponsRouter' has too many lines (595). Maximum allowed is 220  max-lines-per-function
+  23:24  warning  Arrow function has too many lines (325). Maximum allowed is 220                  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\customers.js
+  23:1   warning  Function 'createCustomersRouter' has too many lines (815). Maximum allowed is 220  max-lines-per-function
+  68:39  warning  Arrow function has too many lines (470). Maximum allowed is 220                    max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\digitalcore.js
+  16:1   warning  Function 'createDigitalCoreRouter' has too many lines (1431). Maximum allowed is 220  max-lines-per-function
+  23:28  warning  Async arrow function has too many lines (1214). Maximum allowed is 220                max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\onboarding.js
+  27:1  warning  Function 'createOnboardingRouter' has too many lines (1196). Maximum allowed is 220  max-lines-per-function
+  30:1  warning  Function 'renderOnboardingPage' has too many lines (1002). Maximum allowed is 220    max-lines-per-function
+
+D:\wa-booking-bot\src\admin\routes\owners.js
+  14:1  warning  Function 'createOwnersRouter' has too many lines (424). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\store_config.js
+  12:1  warning  Function 'renderStoreConfigPage' has too many lines (363). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\admin\views.js
+    55:1  warning  Function 'overviewBody' has too many lines (508). Maximum allowed is 220   max-lines-per-function
+   600:1  warning  Function 'bookingsBody' has too many lines (274). Maximum allowed is 220   max-lines-per-function
+  1328:1  warning  Function 'customersBody' has too many lines (240). Maximum allowed is 220  max-lines-per-function
+  1588:1  warning  File has too many lines (1708). Maximum allowed is 1500                    max-lines
+
+D:\wa-booking-bot\src\flow.js
+    520:1  warning  Function 'handleAdminMessageSent' has too many lines (664). Maximum allowed is 220           max-lines-per-function
+   1443:1  warning  Async function 'runIntent' has too many lines (232). Maximum allowed is 220                  max-lines-per-function
+   1723:1  warning  File has too many lines (9346). Maximum allowed is 1500                                      max-lines
+   2112:1  warning  Async function 'handleAdminOwnerCommands' has too many lines (1225). Maximum allowed is 220  max-lines-per-function
+   3513:1  warning  Async function 'processMessage' has too many lines (983). Maximum allowed is 220             max-lines-per-function
+   4908:1  warning  Async function 'handleMainMenu' has too many lines (313). Maximum allowed is 220             max-lines-per-function
+   6806:3  warning  'ownerInfo' is defined but never used. Allowed unused args must match /^_/u                  no-unused-vars
+   6809:3  warning  'activeBundles' is defined but never used. Allowed unused args must match /^_/u              no-unused-vars
+   6810:3  warning  'consumptionDetails' is defined but never used. Allowed unused args must match /^_/u         no-unused-vars
+   7093:1  warning  Async function 'handleVfOtp' has too many lines (296). Maximum allowed is 220                max-lines-per-function
+   8169:1  warning  Async function 'handleConfirm' has too many lines (416). Maximum allowed is 220              max-lines-per-function
+   8936:1  warning  Async function 'handlePayment' has too many lines (328). Maximum allowed is 220              max-lines-per-function
+   9303:1  warning  Async function 'handleReceipt' has too many lines (750). Maximum allowed is 220              max-lines-per-function
+  10134:1  warning  Async function 'handlePaymentClarify' has too many lines (228). Maximum allowed is 220       max-lines-per-function
+
+D:\wa-booking-bot\src\payment_verifier.js
+   610:1  warning  Async function 'processCustomerReceipt' has too many lines (331). Maximum allowed is 220  max-lines-per-function
+  1812:1  warning  File has too many lines (1515). Maximum allowed is 1500                                   max-lines
+
+D:\wa-booking-bot\src\receipt_extractor.js
+  229:1  warning  Async function 'extractReceiptData' has too many lines (364). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\recovery.js
+  92:1  warning  Function 'formatInvalidResponse' has too many lines (369). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\server.js
+  783:1  warning  Async function 'main' has too many lines (240). Maximum allowed is 220  max-lines-per-function
+
+D:\wa-booking-bot\src\store.js
+  1746:1  warning  File has too many lines (2534). Maximum allowed is 1500  max-lines
+
+D:\wa-booking-bot\src\vodafone_api.js
+   382:1   warning  Function 'fetchDxlConsumption' has too many lines (370). Maximum allowed is 220                         max-lines-per-function
+   383:22  warning  Arrow function has too many lines (368). Maximum allowed is 220                                         max-lines-per-function
+   421:42  warning  Arrow function has too many lines (321). Maximum allowed is 220                                         max-lines-per-function
+   437:26  warning  Arrow function has too many lines (306). Maximum allowed is 220                                         max-lines-per-function
+  1779:1   warning  File has too many lines (2908). Maximum allowed is 1500                                                 max-lines
+  2168:1   warning  Async function 'submitVodafoneResetOtpAndSetPassword' has too many lines (309). Maximum allowed is 220  max-lines-per-function
+  2388:11  warning  'firstName' is assigned a value but never used                                                          no-unused-vars
+  2389:11  warning  'lastName' is assigned a value but never used                                                           no-unused-vars
+
+D:\wa-booking-bot\test\admin-ops.test.js
+  169:16  warning  'html' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\admin_intervention_cooldown.test.js
+  7:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\admin_line_inspection.test.js
+   72:54  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  118:48  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  214:54  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  267:54  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+D:\wa-booking-bot\test\admin_routes_smoke.test.js
+  12:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\admin_write_paths.test.js
+  16:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\bot_toggle_chat.test.js
+  319:9  warning  'router' is assigned a value but never used       no-unused-vars
+  322:9  warning  'reqMute' is assigned a value but never used      no-unused-vars
+  329:7  warning  'redirectUrl' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\conversational_resilience.test.js
+  7:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\coupons.test.js
+   26:7  warning  'cairoTime' is assigned a value but never used  no-unused-vars
+  737:9  warning  'another' is assigned a value but never used    no-unused-vars
+
+D:\wa-booking-bot\test\credit_negative_booking.test.js
+  32:7  warning  'store' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\customer_journey_audit.test.js
+  38:7  warning  'customers' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\digital_quantity.test.js
+  15:7  warning  'packages' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\duplicate_partial_receipt.test.js
+  52:7  warning  'receiptExtractor' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\fady_chat_fixes.test.js
+  26:7  warning  'store' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\family_multi_sim_renewal.test.js
+   19:7  warning  'packages' is assigned a value but never used   no-unused-vars
+   21:7  warning  'customers' is assigned a value but never used  no-unused-vars
+  164:9  warning  'b3' is assigned a value but never used         no-unused-vars
+
+D:\wa-booking-bot\test\features2.test.js
+   24:7  warning  'opslog' is assigned a value but never used   no-unused-vars
+   28:7  warning  'intents' is assigned a value but never used  no-unused-vars
+  535:9  warning  'pkg' is assigned a value but never used      no-unused-vars
+  555:9  warning  'chats' is assigned a value but never used    no-unused-vars
+  663:9  warning  'chats' is assigned a value but never used    no-unused-vars
+
+D:\wa-booking-bot\test\financial_automation.test.js
+  19:7  warning  'packages' is assigned a value but never used  no-unused-vars
+  24:7  warning  'httpsms' is assigned a value but never used   no-unused-vars
+
+D:\wa-booking-bot\test\fraud_shield.test.js
+  29:7  warning  'openwa' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\improvements.test.js
+  530:9  warning  'chats' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\invalid_input_recovery.test.js
+  22:7  warning  'packages' is assigned a value but never used  no-unused-vars
+  24:7  warning  'queue' is assigned a value but never used     no-unused-vars
+
+D:\wa-booking-bot\test\mina_ramses_free_orders.test.js
+  7:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\money_paths.test.js
+  11:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\multi_line_renewal.test.js
+  19:7  warning  'packages' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\payment_interactive_clarification.test.js
+  17:7  warning  'customers' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\payment_race.test.js
+  16:7  warning  'os' is assigned a value but never used        no-unused-vars
+  37:9  warning  'bookings' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\payment_verification.test.js
+   17:7  warning  'customers' is assigned a value but never used  no-unused-vars
+  385:9  warning  'b' is assigned a value but never used          no-unused-vars
+  417:9  warning  'res' is assigned a value but never used        no-unused-vars
+
+D:\wa-booking-bot\test\payment_verification_e2e.test.js
+   20:7  warning  'store' is assigned a value but never used  no-unused-vars
+  228:9  warning  'b' is assigned a value but never used      no-unused-vars
+
+D:\wa-booking-bot\test\phase4_voice_telecom.test.js
+  36:7  warning  'customers' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\queue.test.js
+  20:7  warning  'openwa' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\quick_renewal_receipt_hash.test.js
+  20:7  warning  'packages' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\security_hardening.test.js
+   15:7  warning  'os' is assigned a value but never used  no-unused-vars
+  133:9  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\smart_analyzer.test.js
+  7:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\smart_customer_interactions.test.js
+   25:7   warning  'tickets' is assigned a value but never used  no-unused-vars
+  130:11  warning  'sent' is assigned a value but never used     no-unused-vars
+
+D:\wa-booking-bot\test\stock_waitlist.test.js
+  7:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\store_customization.test.js
+  7:7  warning  'os' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\tickets.test.js
+  169:9  warning  'ids' is assigned a value but never used  no-unused-vars
+
+D:\wa-booking-bot\test\vodafone_verification.test.js
+    7:7   warning  'os' is assigned a value but never used                                     no-unused-vars
+   70:51  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  128:51  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  166:51  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  207:68  warning  'code' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  211:51  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  268:68  warning  'code' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  627:68  warning  'code' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  638:51  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  706:68  warning  'code' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+  716:51  warning  'password' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+✖ 203 problems (1 error, 202 warnings)
+  0 errors and 12 warnings potentially fixable with the `--fix` option.
+

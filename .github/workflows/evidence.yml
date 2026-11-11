@@ -1,0 +1,81 @@
+name: evidence
+
+# Runs the proof harness against a checkout of the audited bot and publishes
+# the captured output as a build artefact.
+#
+# The audited bot is not public, so this workflow needs a private checkout:
+#   git clone https://github.com/<owner>/wa-booking-bot.git
+# with the token in BOT_REPO_TOKEN. If that secret is not available, the
+# workflow skips the proof run and only lints the repository.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proofs:
+    name: Run proof harness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check the audited bot checkout
+        id: checkout
+        env:
+          BOT_REPO_TOKEN: ${{ secrets.BOT_REPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BOT_REPO_TOKEN}" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::BOT_REPO_TOKEN is not set — skipping the proof run"
+            exit 0
+          fi
+          git clone --depth 1 "https://x-access-token:${BOT_REPO_TOKEN}@github.com/kero309x/wa-booking-bot.git" bot
+          echo "available=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install bot dependencies
+        if: steps.checkout.outputs.available == 'true'
+        working-directory: bot
+        run: npm ci --omit=dev
+
+      - name: Run the proofs
+        if: steps.checkout.outputs.available == 'true'
+        env:
+          BOT_REPO: ${{ github.workspace }}/bot
+        run: node scripts/proofs/run-all.js
+
+      - name: Upload captured output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence
+          path: |
+            evidence/proofs/
+            evidence/findings.json
+            evidence/proof-run.json
+          if-no-files-found: warn
+
+  lint:
+    name: Syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse every proof script
+        run: |
+          set -euo pipefail
+          for f in scripts/proofs/*.js scripts/*.js; do
+            node --check "$f"
+            echo "ok: $f"
+          done

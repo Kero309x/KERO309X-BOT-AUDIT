@@ -1,0 +1,57 @@
+Kero309x Bot Audit — NOTICE
+===========================
+
+1. Independence
+---------------
+
+Kero309x Bot Audit is an independent audit of a privately operated WhatsApp
+bot. It is not a fork, mirror or rebranding of that bot, and it contains no
+source code taken from it.
+
+What this repository publishes is:
+
+  - analysis written from reading the audited source;
+  - proof scripts that execute that source and print observed values;
+  - captured output of those scripts;
+  - screenshots captured from a synthetic sandbox environment.
+
+The audited bot is the work of its own owner. Nothing in this repository
+changes its licence, and no part of it is redistributed here.
+
+2. Trademarks and product names
+--------------------------------
+
+Product and service names referenced by this repository — including WhatsApp
+and Meta, OpenWA, Vodafone, Etisalat, WE, Orange, Banque Misr, InstaPay,
+DigitalCore, Gemini, and Tesseract — belong to their respective owners. They
+are used only to describe which external service the audited code talks to.
+
+This project is not affiliated with, endorsed by, or sponsored by any of
+those owners. No endorsement of this audit is implied by their products being
+mentioned, and no criticism of them is implied by the findings.
+
+3. Customer data
+-----------------
+
+The audited system stores real customer data. This repository publishes
+pseudonymised identifiers only, as described in docs/decisions/0002-redaction.md.
+Receipt images, chat message bodies and payment message text are not
+published. Screenshots come from the audited system's own synthetic sandbox
+environment.
+
+The mapping between a pseudonym and a person exists only in the private
+database of the audited system's owner. The pseudonyms are a re-identification
+defence against casual reading and bulk scraping; they are not a claim of
+anonymity, and they are not intended to withstand a determined adversary who
+holds the database.
+
+4. No warranty
+---------------
+
+The software is provided under GPL-3.0-only, without warranty of any kind.
+See LICENSE.
+
+Findings are reproducible statements about the state of the audited code at
+the time of publication. They are not a guarantee about any other revision,
+and they are not a substitute for the owner's own judgement about what to
+change.
