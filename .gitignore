@@ -1,6 +1,8 @@
-# Local checkout of the audited bot â€” never commit it
-wa-booking-bot/
-BOT_REPO/
+# Local checkout of the audited bot — never commit it.
+# مثبّت على الجذر: بدون / كان يستثني أي مجلد يحمل الاسم نفسه،
+# ومنها evidence/<subject>/ و subjects/<subject>/.
+/wa-booking-bot/
+/BOT_REPO/
 *.bot/
 
 audit.config.json

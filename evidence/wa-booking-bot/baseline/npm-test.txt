@@ -1,0 +1,21 @@
+> wa-booking-bot@1.0.0 test
+> node scripts/run-tests.js
+[run-tests] 93 ملف اختبار — Node v26.13.0
+ℹ tests 808
+ℹ suites 1
+ℹ pass 807
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67292.7502
+✖ failing tests:
+test at test\audio_transcriber.test.js:17:1
+✖ transcribe.py: normalize_spoken_digits converts spoken Egyptian numbers to digits (1308.8311ms)
+      at TestContext.<anonymous> (D:\wa-booking-bot\test\audio_transcriber.test.js:28:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {

@@ -1,0 +1,198 @@
+{
+  "generatedAt": "2026-11-11T18:20:04.350Z",
+  "subject": "wa-booking-bot",
+  "subjectTitle": "wa-booking-bot — متجر باقات وخدمات رقمية",
+  "botRepo": "D:\\wa-booking-bot",
+  "manifestVersion": "0.2.0",
+  "total": 16,
+  "reproduced": 16,
+  "clean": 0,
+  "notApplicable": 0,
+  "errors": 0,
+  "coverageByScope": {
+    "template": {
+      "total": 5,
+      "reproduced": 5,
+      "clean": 0,
+      "na": 0,
+      "error": 0
+    },
+    "configurable": {
+      "total": 4,
+      "reproduced": 4,
+      "clean": 0,
+      "na": 0,
+      "error": 0
+    },
+    "generic": {
+      "total": 7,
+      "reproduced": 7,
+      "clean": 0,
+      "na": 0,
+      "error": 0
+    }
+  },
+  "missingFromManifest": [],
+  "results": [
+    {
+      "id": "P01",
+      "file": "P01-mina-gate-by-name.js",
+      "verdict": "REPRODUCED",
+      "severity": "critical",
+      "title": "بوابة التفعيل الخاص تُفتح باسم يكتبه العميل نفسه",
+      "scope": "template",
+      "ms": 229,
+      "exitCode": 0
+    },
+    {
+      "id": "P02",
+      "file": "P02-digitalcore-rebuy-type-mismatch.js",
+      "verdict": "REPRODUCED",
+      "severity": "critical",
+      "title": "مسار إعادة الشراء الرقمي في اللوحة يخرج دائماً قبل الشراء",
+      "scope": "template",
+      "ms": 230,
+      "exitCode": 0
+    },
+    {
+      "id": "P03",
+      "file": "P03-sms-webhook-fail-open.js",
+      "verdict": "REPRODUCED",
+      "severity": "critical",
+      "title": "webhook الخاص بالرسائل البنكية مفتوح في كل بيئة غير production",
+      "scope": "template",
+      "ms": 170,
+      "exitCode": 0
+    },
+    {
+      "id": "P04",
+      "file": "P04-paid-without-payment-claim.js",
+      "verdict": "REPRODUCED",
+      "severity": "high",
+      "title": "حجوزات مدفوعة بلا صف payment_claims يربطها بالدفعة",
+      "scope": "configurable",
+      "ms": 208,
+      "exitCode": 0
+    },
+    {
+      "id": "P05",
+      "file": "P05-coupon-not-consumed-on-atomic-claim.js",
+      "verdict": "REPRODUCED",
+      "severity": "high",
+      "title": "المطالبة الذرّية للدفع لا تستهلك الكوبون",
+      "scope": "configurable",
+      "ms": 329,
+      "exitCode": 0
+    },
+    {
+      "id": "P06",
+      "file": "P06-name-fuzzy-match-collides.js",
+      "verdict": "REPRODUCED",
+      "severity": "high",
+      "title": "مطابقة الاسم بالعتمة تخلط أسماءً مختلفة تماماً",
+      "scope": "template",
+      "ms": 248,
+      "exitCode": 0
+    },
+    {
+      "id": "P07",
+      "file": "P07-followups-digital-activation-dead.js",
+      "verdict": "REPRODUCED",
+      "severity": "medium",
+      "title": "التحقق من التفعيل الرقمي معطّل: حاجز خاطئ + استعلام على عمود غير موجود",
+      "scope": "template",
+      "ms": 202,
+      "exitCode": 0
+    },
+    {
+      "id": "P08",
+      "file": "P08-undeclared-production-dependency.js",
+      "verdict": "REPRODUCED",
+      "severity": "high",
+      "title": "اعتماديات في مسار الإنتاج غير معلنة أو مُعلنة dev فقط",
+      "scope": "generic",
+      "ms": 279,
+      "exitCode": 0
+    },
+    {
+      "id": "P09",
+      "file": "P09-data-dir-triggers-mock-sends.js",
+      "verdict": "REPRODUCED",
+      "severity": "high",
+      "title": "تغيير مسار DATA_DIR يحوّل كل الإرسال إلى وضع المحاكاة",
+      "scope": "generic",
+      "ms": 179,
+      "exitCode": 0
+    },
+    {
+      "id": "P10",
+      "file": "P10-stale-lock-pid-blocks-boot.js",
+      "verdict": "REPRODUCED",
+      "severity": "critical",
+      "title": "ملف القفل يحمل PID من ويندوز فيمنع إقلاع البوت على السيرفر",
+      "scope": "generic",
+      "ms": 168,
+      "exitCode": 0
+    },
+    {
+      "id": "P11",
+      "file": "P11-refund-does-not-restore-wallet.js",
+      "verdict": "REPRODUCED",
+      "severity": "medium",
+      "title": "استرداد دفعة من محفظة العميل عبر اللوحة لا يُعيد الرصيد",
+      "scope": "configurable",
+      "ms": 413,
+      "exitCode": 0
+    },
+    {
+      "id": "P12",
+      "file": "P12-money-path-guards-that-hold.js",
+      "verdict": "REPRODUCED",
+      "severity": "info",
+      "title": "ضمانات المسار المالي التي تعمل فعلاً (شاهد إيجابي)",
+      "scope": "configurable",
+      "ms": 392,
+      "exitCode": 0
+    },
+    {
+      "id": "P13",
+      "file": "P13-test-and-lint-baseline.js",
+      "verdict": "REPRODUCED",
+      "severity": "info",
+      "title": "خط أساس الاختبارات والتدقيق الثابت",
+      "scope": "generic",
+      "ms": 82622,
+      "exitCode": 0
+    },
+    {
+      "id": "P14",
+      "file": "P14-unconfigured-auth-fail-open-scan.js",
+      "verdict": "REPRODUCED",
+      "severity": "critical",
+      "title": "مصادقة مفتوحة عند غياب المفتاح — فحص عام",
+      "scope": "generic",
+      "ms": 218,
+      "exitCode": 0
+    },
+    {
+      "id": "P15",
+      "file": "P15-sql-column-not-in-schema.js",
+      "verdict": "REPRODUCED",
+      "severity": "high",
+      "title": "عمود SQL مستعمل وغير موجود في المخطط",
+      "scope": "generic",
+      "ms": 229,
+      "exitCode": 0
+    },
+    {
+      "id": "P16",
+      "file": "P16-swallowed-error-scan.js",
+      "verdict": "REPRODUCED",
+      "severity": "medium",
+      "title": "أخطاء تُبتلع بلا تسجيل — وخصوصاً في المسار المالي",
+      "scope": "generic",
+      "ms": 178,
+      "exitCode": 0
+    }
+  ]
+}
